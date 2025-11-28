@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { FaExclamationTriangle, FaExclamationCircle, FaCheckCircle, FaEye, FaCalendarAlt, FaFlask } from 'react-icons/fa';
+import {
+  FaExclamationTriangle,
+  FaExclamationCircle,
+  FaCheckCircle,
+  FaEye,
+  FaCalendarAlt,
+  FaFlask,
+  FaRobot          // ✅ Add this
+} from 'react-icons/fa';
+
 import TaperModal from './TaperModal';
 import InteractionModal from './InteractionModal';
 import MonitoringModal from './MonitoringModal';
@@ -247,6 +256,7 @@ const ResultsDashboard = ({ results, patientData }) => {
 };
 
 // Medication Card Component
+// Medication Card Component
 const MedicationCard = ({ medication, riskColor, onViewTaper, onViewMonitoring }) => {
   const colorClasses = {
     red: 'border-risk-red bg-red-50',
@@ -321,15 +331,19 @@ const MedicationCard = ({ medication, riskColor, onViewTaper, onViewMonitoring }
 
         {/* Action Buttons */}
         <div className="ml-4 flex flex-col space-y-2">
+
+          {/* ✅ NEW AI TAPER BUTTON WITH GRADIENT + ROBOT ICON */}
           {medication.taper_required && (
             <button
               onClick={() => onViewTaper(medication)}
-              className="px-3 py-2 bg-indigo-600 text-white text-sm rounded-md hover:bg-indigo-700 transition flex items-center"
+              className="px-3 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-sm rounded-md 
+                         hover:from-indigo-700 hover:to-purple-700 transition flex items-center shadow-md"
             >
-              <FaCalendarAlt className="mr-2" />
-              View Taper Plan
+              <FaRobot className="mr-2" />
+              AI Taper Plan
             </button>
           )}
+
           <button
             onClick={() => onViewMonitoring(medication)}
             className="px-3 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700 transition flex items-center"
@@ -342,5 +356,6 @@ const MedicationCard = ({ medication, riskColor, onViewTaper, onViewMonitoring }
     </div>
   );
 };
+
 
 export default ResultsDashboard;

@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
@@ -15,6 +16,11 @@ from app.services.priority_classifier import PriorityClassifier
 from app.services.analysis_service import AnalysisService
 from app.services.taper_plan_service import TaperPlanService
 from app.utils.data_loader import *
+from app.services.taper_plan_service import TaperPlanService
+
+from dotenv import load_dotenv
+load_dotenv()
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
 
 app = FastAPI(
     title="Deprescribing Clinical Decision Support System",
@@ -36,6 +42,7 @@ app.add_middleware(
 # ========== STARTUP: Load Data & Initialize Engines ==========
 print("🚀 Starting Deprescribing Engine API...")
 print("📁 Loading datasets...")
+
 
 acb_data = load_acb_data()
 beers_data = load_beers_data()
@@ -69,11 +76,26 @@ engines = {
 
 # Initialize services
 analysis_service = AnalysisService(engines)
-taper_service = TaperPlanService(tapering_data, cfs_data)
+taper_service = TaperPlanService(
+    tapering_data, 
+    cfs_data,
+    gemini_api_key=GEMINI_API_KEY  # Pass API key
+)
 priority_classifier = PriorityClassifier()
 
 print("✅ All engines initialized!")
 print("🎉 API ready to serve requests!\n")
+# After initializing taper_service
+print("\n" + "="*60)
+print("TAPER SERVICE DEBUG INFO:")
+print(f"  Gemini enabled: {taper_service.use_gemini}")
+print(f"  Gemini service: {taper_service.gemini_service}")
+if taper_service.use_gemini and taper_service.gemini_service:
+    print("  ✅ Taper service WILL use Gemini for unknown drugs")
+else:
+    print("  ⚠️  Taper service will NOT use Gemini")
+print("="*60 + "\n")
+
 
 # ========== ENDPOINT 1: /analyze-patient ==========
 @app.post("/analyze-patient", response_model=AnalyzePatientResponse, tags=["Analysis"])
