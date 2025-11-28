@@ -1,0 +1,10 @@
+cfs_score,clinical_label,frailty_category,risk_weight,taper_speed_multiplier,clinical_guidance
+1,Very Fit,Fit,1.0,1.0,Standard tapering protocols apply. Low risk of withdrawal complications.
+2,Well,Fit,1.0,1.0,Standard tapering protocols apply.
+3,Managing Well,Fit,1.0,1.0,Standard tapering protocols apply. Monitor for latent symptoms.
+4,Vulnerable,Vulnerable,1.25,0.75,Consider extending taper duration by 25%. Monitor for 'unmasking' of symptoms.
+5,Mildly Frail,Frail,1.5,0.5,"Physiological reserve is reduced. Cut standard dose reduction steps in half (e.g., reduce by 10% instead of 20%)."
+6,Moderately Frail,Frail,1.75,0.5,High risk of withdrawal causing confusion/falls. Use 'Hyperbolic' (very slow) tapering.
+7,Severely Frail,Severe Frailty,2.0,0.25,Extreme Caution. Withdrawal stress may precipitate delirium. Extend taper steps to 6-8 weeks.
+8,Very Severely Frail,Severe Frailty,2.5,0.25,Approaching end of life. Only deprescribe if medication is causing overt harm. Taper very slowly.
+9,Terminally Ill,Terminal,0.0,0.0,"Symptom control is priority. Deprescribing is based on 'Time to Benefit'. If drug provides no symptom relief, stop immediately. If withdrawal causes distress, maintain dose."

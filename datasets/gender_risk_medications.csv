@@ -1,0 +1,10 @@
+risk_category,drug_class,drug_name,gender_risk,risk_level,mechanism,monitoring_guidance
+QT Prolongation,Antiarrhythmic,Sotalol,Female > Male,High,Estrogen-mediated reduction in repolarization reserve.,Monitor ECG 2-4 hours after first dose. Avoid if QTc > 500ms.
+QT Prolongation,SSRI,Citalopram,Female > Male,Moderate,Dose-dependent QTc prolongation.,Max dose 20mg in older adults (>60 years). Annual ECG recommended.
+QT Prolongation,Antipsychotic,Haloperidol,Female > Male,"High (IV), Moderate (Oral)",Blockade of hERG potassium channels.,Avoid IV use without cardiac monitoring. Check Mg/K levels.
+QT Prolongation,Antibiotic,Erythromycin,Female > Male,Moderate,Direct channel blockade.,Avoid in patients with baseline QTc > 450ms (men) or > 470ms (women).
+Hyponatremia,Thiazide Diuretic,Hydrochlorothiazide,Female > Male,High,Impaired free water excretion and polydipsia. Older women account for >70% of severe cases.,Check Sodium (Na) within 1-2 weeks of initiation. Stop if Na < 130 mmol/L.
+Hyponatremia,Antiepileptic,Carbamazepine,Female > Male,High,Increases sensitivity to ADH (SIADH).,Baseline Na and monthly monitoring for first 3 months.
+Hyponatremia,SSRI,Sertraline,Female > Male,Moderate,SIADH (Syndrome of Inappropriate Antidiuretic Hormone).,"Check Na if patient presents with confusion, lethargy, or falls."
+Sedation / Fall Risk,Z-Drug (Hypnotic),Zolpidem,Female > Male,High,Lower clearance rates in women lead to higher blood concentrations the next morning.,FDA Requirement: Max starting dose for women is 5mg (vs 10mg for men).
+Sedation / Fall Risk,Benzodiazepine,Diazepam,Female > Male,High,"Lipophilic drug accumulates more in women (higher body fat %), extending half-life.",Avoid long-acting agents. Use lower doses.

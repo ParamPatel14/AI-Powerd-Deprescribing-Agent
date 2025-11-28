@@ -1,0 +1,9 @@
+drug_class,drug_name,indication_context,time_to_benefit,ttb_months_min,ttb_months_max,deprescribing_guidance,reference_trial
+Statin,All Statins,Primary Prevention (No history of MI/Stroke),2 to 5 Years,24,60,"Deprescribe if Life Expectancy < 2-5 years. The harm (muscle pain, pill burden) likely outweighs the CV benefit.",PROSPER Trial / Statin Trialists
+Statin,All Statins,Secondary Prevention (History of MI/Stroke),6 to 12 Months,6,12,Benefit is rapid. Maintain therapy unless patient is in end-of-life/palliative care or experiencing severe side effects.,4S Trial / LIPID
+Bisphosphonate,"Alendronate, Risedronate",Osteoporosis (Fracture Prevention),8 to 19 Months,8,19,Stop if Life Expectancy < 1-2 years. Also consider 'Drug Holiday' after 5 years of use due to atypical fracture risk.,FIT Trial / HORIZON-PFT
+Antihyperglycemic,"Insulin, Sulfonylureas",Strict Control (HbA1c < 7%) to prevent microvascular complications,8 Years,96,120,"Strict control takes ~8 years to show benefit (UKPDS). If LE < 8 years, relax target to HbA1c 8.0-9.0% to avoid hypoglycemia.",UKPDS / ACCORD
+Antihypertensive,"Thiazides, ACEI, CCB",Stroke/CV Prevention,1 to 2 Years,12,24,Benefit is relatively fast. Continue unless hypotension or orthostasis causes falls. Deprescribe in severe frailty.,HYVET Trial
+Antiplatelet,Aspirin,Primary Prevention (Elderly),None (Harm > Benefit),999,999,Deprescribe immediately. ASPREE trial showed increased bleeding/mortality with NO cardiovascular benefit in healthy elderly >70.,ASPREE Trial (2018)
+Cholinesterase Inhibitor,"Donepezil, Rivastigmine",Alzheimer's Dementia,12 Weeks (Symptomatic),3,3,"This is symptomatic only (not disease modifying). If no improvement seen in 3-6 months, or if dementia progresses to severe stage (unable to interact), stop.",Cochrane Reviews
+Supplement,"Multivitamins, Fish Oil",General Health / Prevention,None proven,999,999,Deprescribe to reduce pill burden. No evidence of mortality benefit in elderly.,USPSTF

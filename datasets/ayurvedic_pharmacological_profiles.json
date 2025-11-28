@@ -1,0 +1,1026 @@
+{
+  "herbs": [
+    {
+      "herb_name": "Ashwagandha",
+      "scientific_name": "Withania somnifera",
+      "common_indications": [
+        "stress",
+        "anxiety",
+        "immunity",
+        "energy",
+        "sleep"
+      ],
+      "ayurvedic_rasa": [
+        "bitter",
+        "astringent",
+        "sweet"
+      ],
+      "ayurvedic_virya": "heating",
+      "ayurvedic_category": "Rasayana (rejuvenator), Balya (strength)",
+      "pharmacological_profile": {
+        "sedative_like": 0.7,
+        "anxiolytic_like": 0.8,
+        "immunomodulator": 0.7,
+        "adaptogenic": 0.9,
+        "thyroid_stimulant": 0.5,
+        "hypotensive": 0.4,
+        "hypoglycemic": 0.5
+      },
+      "safety_concerns": [
+        "sedation",
+        "thyroid effects",
+        "immunomodulation"
+      ],
+      "contraindicated_conditions": [
+        "hyperthyroidism",
+        "severe pregnancy complications"
+      ],
+      "organ_tropism": [
+        "nervous_system",
+        "immune_system",
+        "endocrine"
+      ]
+    },
+    {
+      "herb_name": "Turmeric",
+      "scientific_name": "Curcuma longa",
+      "common_indications": [
+        "inflammation",
+        "pain",
+        "immunity",
+        "digestion"
+      ],
+      "ayurvedic_rasa": [
+        "bitter",
+        "pungent"
+      ],
+      "ayurvedic_virya": "heating",
+      "ayurvedic_category": "Varnya (complexion), Kushthagna (skin diseases)",
+      "pharmacological_profile": {
+        "anti_inflammatory": 0.9,
+        "antiplatelet": 0.6,
+        "hepatoprotective": 0.7,
+        "hepatotoxic_high_dose": 0.4,
+        "hypoglycemic": 0.5,
+        "immunomodulator": 0.6
+      },
+      "safety_concerns": [
+        "bleeding risk",
+        "hepatotoxicity at high doses",
+        "gallbladder stimulation"
+      ],
+      "contraindicated_conditions": [
+        "bile duct obstruction",
+        "active bleeding"
+      ],
+      "organ_tropism": [
+        "liver",
+        "blood",
+        "digestive_system"
+      ]
+    },
+    {
+      "herb_name": "Brahmi",
+      "scientific_name": "Bacopa monnieri",
+      "common_indications": [
+        "memory",
+        "cognition",
+        "anxiety",
+        "mental clarity"
+      ],
+      "ayurvedic_rasa": [
+        "bitter"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Medhya (brain tonic)",
+      "pharmacological_profile": {
+        "cognitive_enhancer": 0.8,
+        "anxiolytic_like": 0.6,
+        "cholinergic": 0.5,
+        "thyroid_stimulant": 0.4,
+        "sedative_like": 0.3
+      },
+      "safety_concerns": [
+        "thyroid effects",
+        "GI upset",
+        "bradycardia"
+      ],
+      "contraindicated_conditions": [
+        "bradycardia",
+        "hypothyroidism"
+      ],
+      "organ_tropism": [
+        "nervous_system",
+        "endocrine"
+      ]
+    },
+    {
+      "herb_name": "Triphala",
+      "scientific_name": "Terminalia chebula + Terminalia bellirica + Emblica officinalis",
+      "common_indications": [
+        "digestion",
+        "constipation",
+        "detox",
+        "immunity"
+      ],
+      "ayurvedic_rasa": [
+        "all six tastes"
+      ],
+      "ayurvedic_virya": "neutral",
+      "ayurvedic_category": "Rasayana, Anulomana (laxative)",
+      "pharmacological_profile": {
+        "laxative": 0.7,
+        "antioxidant": 0.8,
+        "hypoglycemic": 0.5,
+        "anticoagulant_mild": 0.3,
+        "immunomodulator": 0.6
+      },
+      "safety_concerns": [
+        "diarrhea",
+        "electrolyte imbalance",
+        "INR alterations"
+      ],
+      "contraindicated_conditions": [
+        "diarrhea",
+        "intestinal obstruction"
+      ],
+      "organ_tropism": [
+        "digestive_system",
+        "colon"
+      ]
+    },
+    {
+      "herb_name": "Holy Basil (Tulsi)",
+      "scientific_name": "Ocimum sanctum",
+      "common_indications": [
+        "immunity",
+        "cough",
+        "stress",
+        "fever"
+      ],
+      "ayurvedic_rasa": [
+        "pungent",
+        "bitter"
+      ],
+      "ayurvedic_virya": "heating",
+      "ayurvedic_category": "Kasa-swasahara (respiratory), Rasayana",
+      "pharmacological_profile": {
+        "adaptogenic": 0.7,
+        "immunomodulator": 0.8,
+        "hypoglycemic": 0.6,
+        "antiplatelet": 0.4,
+        "antitussive": 0.5
+      },
+      "safety_concerns": [
+        "hypoglycemia",
+        "bleeding risk",
+        "fertility effects"
+      ],
+      "contraindicated_conditions": [
+        "pregnancy",
+        "surgery within 2 weeks"
+      ],
+      "organ_tropism": [
+        "respiratory_system",
+        "immune_system"
+      ]
+    },
+    {
+      "herb_name": "Guggul",
+      "scientific_name": "Commiphora mukul",
+      "common_indications": [
+        "cholesterol",
+        "arthritis",
+        "weight loss"
+      ],
+      "ayurvedic_rasa": [
+        "bitter",
+        "pungent",
+        "astringent"
+      ],
+      "ayurvedic_virya": "heating",
+      "ayurvedic_category": "Medohara (fat reducer), Amapachana",
+      "pharmacological_profile": {
+        "hypolipidemic": 0.7,
+        "anti_inflammatory": 0.6,
+        "thyroid_stimulant": 0.6,
+        "anticoagulant": 0.5,
+        "hepatotoxic_concern": 0.3
+      },
+      "safety_concerns": [
+        "bleeding risk",
+        "thyroid effects",
+        "hepatotoxicity"
+      ],
+      "contraindicated_conditions": [
+        "hyperthyroidism",
+        "bleeding disorders",
+        "liver disease"
+      ],
+      "organ_tropism": [
+        "liver",
+        "thyroid",
+        "cardiovascular"
+      ]
+    },
+    {
+      "herb_name": "Shankhpushpi",
+      "scientific_name": "Convolvulus pluricaulis",
+      "common_indications": [
+        "memory",
+        "anxiety",
+        "sleep",
+        "mental health"
+      ],
+      "ayurvedic_rasa": [
+        "sweet",
+        "bitter"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Medhya, Nidrajanana (sleep inducer)",
+      "pharmacological_profile": {
+        "sedative_like": 0.6,
+        "anxiolytic_like": 0.7,
+        "cognitive_enhancer": 0.6,
+        "antiepileptic_interaction": 0.7
+      },
+      "safety_concerns": [
+        "sedation",
+        "antiepileptic drug interactions"
+      ],
+      "contraindicated_conditions": [
+        "epilepsy on phenytoin"
+      ],
+      "organ_tropism": [
+        "nervous_system"
+      ]
+    },
+    {
+      "herb_name": "Ginger",
+      "scientific_name": "Zingiber officinale",
+      "common_indications": [
+        "nausea",
+        "digestion",
+        "inflammation",
+        "pain"
+      ],
+      "ayurvedic_rasa": [
+        "pungent"
+      ],
+      "ayurvedic_virya": "heating",
+      "ayurvedic_category": "Deepana (appetizer), Shothahara (anti-inflammatory)",
+      "pharmacological_profile": {
+        "antiemetic": 0.8,
+        "antiplatelet": 0.5,
+        "anti_inflammatory": 0.6,
+        "hypoglycemic": 0.4,
+        "prokinetic": 0.6
+      },
+      "safety_concerns": [
+        "bleeding risk",
+        "heartburn",
+        "hypoglycemia"
+      ],
+      "contraindicated_conditions": [
+        "active bleeding",
+        "gallstones"
+      ],
+      "organ_tropism": [
+        "digestive_system",
+        "blood"
+      ]
+    },
+    {
+      "herb_name": "Boswellia (Shallaki)",
+      "scientific_name": "Boswellia serrata",
+      "common_indications": [
+        "arthritis",
+        "inflammation",
+        "pain"
+      ],
+      "ayurvedic_rasa": [
+        "bitter",
+        "pungent",
+        "astringent"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Sandhigata vataghna (joint disorders)",
+      "pharmacological_profile": {
+        "anti_inflammatory": 0.9,
+        "analgesic": 0.6,
+        "immunomodulator": 0.5,
+        "GI_irritant": 0.4
+      },
+      "safety_concerns": [
+        "GI upset",
+        "nausea",
+        "immunomodulation"
+      ],
+      "contraindicated_conditions": [
+        "pregnancy",
+        "autoimmune on immunosuppressants"
+      ],
+      "organ_tropism": [
+        "joints",
+        "digestive_system"
+      ]
+    },
+    {
+      "herb_name": "Neem",
+      "scientific_name": "Azadirachta indica",
+      "common_indications": [
+        "skin conditions",
+        "immunity",
+        "blood sugar",
+        "parasites"
+      ],
+      "ayurvedic_rasa": [
+        "bitter"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Kushthagna, Krimighna (antiparasitic)",
+      "pharmacological_profile": {
+        "antimicrobial": 0.7,
+        "immunomodulator": 0.7,
+        "hypoglycemic": 0.7,
+        "contraceptive": 0.5,
+        "hepatotoxic_concern": 0.3
+      },
+      "safety_concerns": [
+        "hypoglycemia",
+        "fertility effects",
+        "hepatotoxicity",
+        "immunomodulation"
+      ],
+      "contraindicated_conditions": [
+        "pregnancy",
+        "infertility treatment",
+        "organ transplant"
+      ],
+      "organ_tropism": [
+        "skin",
+        "liver",
+        "immune_system"
+      ]
+    },
+    {
+      "herb_name": "Arjuna",
+      "scientific_name": "Terminalia arjuna",
+      "common_indications": [
+        "heart health",
+        "hypertension",
+        "cholesterol"
+      ],
+      "ayurvedic_rasa": [
+        "astringent"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Hridya (cardiotonic)",
+      "pharmacological_profile": {
+        "cardiotonic": 0.8,
+        "hypotensive": 0.7,
+        "hypolipidemic": 0.6,
+        "antiplatelet": 0.4,
+        "inotropic": 0.5
+      },
+      "safety_concerns": [
+        "hypotension",
+        "bleeding risk",
+        "cardiac glycoside interaction"
+      ],
+      "contraindicated_conditions": [
+        "severe hypotension",
+        "bradycardia"
+      ],
+      "organ_tropism": [
+        "cardiovascular"
+      ]
+    },
+    {
+      "herb_name": "Shatavari",
+      "scientific_name": "Asparagus racemosus",
+      "common_indications": [
+        "female reproductive health",
+        "lactation",
+        "immunity",
+        "ulcers"
+      ],
+      "ayurvedic_rasa": [
+        "sweet",
+        "bitter"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Rasayana, Stanyajanana (galactagogue)",
+      "pharmacological_profile": {
+        "galactagogue": 0.7,
+        "phytoestrogenic": 0.5,
+        "immunomodulator": 0.6,
+        "diuretic": 0.5,
+        "gastroprotective": 0.6
+      },
+      "safety_concerns": [
+        "hormone-sensitive conditions",
+        "diuretic effect",
+        "allergy"
+      ],
+      "contraindicated_conditions": [
+        "estrogen-dependent tumors",
+        "kidney stones"
+      ],
+      "organ_tropism": [
+        "reproductive_system",
+        "kidney",
+        "digestive_system"
+      ]
+    },
+    {
+      "herb_name": "Guduchi",
+      "scientific_name": "Tinospora cordifolia",
+      "common_indications": [
+        "immunity",
+        "fever",
+        "diabetes",
+        "liver health"
+      ],
+      "ayurvedic_rasa": [
+        "bitter",
+        "astringent"
+      ],
+      "ayurvedic_virya": "heating",
+      "ayurvedic_category": "Rasayana, Jvaraghna (antipyretic)",
+      "pharmacological_profile": {
+        "immunomodulator": 0.9,
+        "hepatoprotective": 0.7,
+        "hypoglycemic": 0.6,
+        "antipyretic": 0.6,
+        "adaptogenic": 0.5
+      },
+      "safety_concerns": [
+        "hypoglycemia",
+        "immunomodulation",
+        "autoimmune activation"
+      ],
+      "contraindicated_conditions": [
+        "autoimmune diseases",
+        "organ transplant"
+      ],
+      "organ_tropism": [
+        "immune_system",
+        "liver"
+      ]
+    },
+    {
+      "herb_name": "Haritaki",
+      "scientific_name": "Terminalia chebula",
+      "common_indications": [
+        "digestion",
+        "constipation",
+        "detox",
+        "rejuvenation"
+      ],
+      "ayurvedic_rasa": [
+        "all except salty"
+      ],
+      "ayurvedic_virya": "heating",
+      "ayurvedic_category": "Rasayana, Anulomana",
+      "pharmacological_profile": {
+        "laxative": 0.8,
+        "antioxidant": 0.7,
+        "hypoglycemic": 0.5,
+        "hypolipidemic": 0.5,
+        "antimicrobial": 0.6
+      },
+      "safety_concerns": [
+        "diarrhea",
+        "dehydration",
+        "hypoglycemia"
+      ],
+      "contraindicated_conditions": [
+        "pregnancy",
+        "diarrhea",
+        "dehydration"
+      ],
+      "organ_tropism": [
+        "digestive_system",
+        "colon"
+      ]
+    },
+    {
+      "herb_name": "Amla",
+      "scientific_name": "Emblica officinalis",
+      "common_indications": [
+        "immunity",
+        "vitamin C",
+        "hair health",
+        "digestion"
+      ],
+      "ayurvedic_rasa": [
+        "sour",
+        "sweet",
+        "bitter",
+        "pungent",
+        "astringent"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Rasayana, Varnya",
+      "pharmacological_profile": {
+        "antioxidant": 0.9,
+        "immunomodulator": 0.7,
+        "hypoglycemic": 0.5,
+        "hypolipidemic": 0.6,
+        "anticoagulant_mild": 0.3
+      },
+      "safety_concerns": [
+        "bleeding risk (high vitamin C)",
+        "INR changes",
+        "diarrhea"
+      ],
+      "contraindicated_conditions": [
+        "bleeding disorders"
+      ],
+      "organ_tropism": [
+        "immune_system",
+        "digestive_system"
+      ]
+    },
+    {
+      "herb_name": "Punarnava",
+      "scientific_name": "Boerhavia diffusa",
+      "common_indications": [
+        "kidney health",
+        "edema",
+        "liver health",
+        "diuretic"
+      ],
+      "ayurvedic_rasa": [
+        "sweet",
+        "bitter"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Shodhana (diuretic), Yakriduttejaka (hepatoprotective)",
+      "pharmacological_profile": {
+        "diuretic": 0.8,
+        "hepatoprotective": 0.6,
+        "anti_inflammatory": 0.5,
+        "immunomodulator": 0.5
+      },
+      "safety_concerns": [
+        "electrolyte imbalance",
+        "dehydration",
+        "lithium interaction"
+      ],
+      "contraindicated_conditions": [
+        "severe dehydration",
+        "lithium therapy"
+      ],
+      "organ_tropism": [
+        "kidney",
+        "liver"
+      ]
+    },
+    {
+      "herb_name": "Licorice (Yashtimadhu)",
+      "scientific_name": "Glycyrrhiza glabra",
+      "common_indications": [
+        "cough",
+        "ulcers",
+        "adrenal support",
+        "throat"
+      ],
+      "ayurvedic_rasa": [
+        "sweet"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Kasa-swasahara, Vayasthapana (anti-aging)",
+      "pharmacological_profile": {
+        "demulcent": 0.7,
+        "anti_inflammatory": 0.6,
+        "cortisol_like": 0.7,
+        "hypertensive": 0.8,
+        "hypokalemic": 0.7,
+        "mineralocorticoid": 0.6
+      },
+      "safety_concerns": [
+        "hypertension",
+        "hypokalemia",
+        "edema",
+        "cardiac arrhythmia"
+      ],
+      "contraindicated_conditions": [
+        "hypertension",
+        "heart failure",
+        "hypokalemia",
+        "pregnancy"
+      ],
+      "organ_tropism": [
+        "respiratory_system",
+        "adrenal",
+        "cardiovascular"
+      ]
+    },
+    {
+      "herb_name": "Fenugreek (Methi)",
+      "scientific_name": "Trigonella foenum-graecum",
+      "common_indications": [
+        "diabetes",
+        "lactation",
+        "digestion",
+        "cholesterol"
+      ],
+      "ayurvedic_rasa": [
+        "bitter",
+        "pungent"
+      ],
+      "ayurvedic_virya": "heating",
+      "ayurvedic_category": "Stanyajanana, Medhohara",
+      "pharmacological_profile": {
+        "hypoglycemic": 0.8,
+        "hypolipidemic": 0.6,
+        "galactagogue": 0.7,
+        "anticoagulant": 0.4,
+        "uterotonic": 0.5
+      },
+      "safety_concerns": [
+        "hypoglycemia",
+        "bleeding risk",
+        "uterine stimulation"
+      ],
+      "contraindicated_conditions": [
+        "pregnancy",
+        "bleeding disorders"
+      ],
+      "organ_tropism": [
+        "pancreas",
+        "blood",
+        "reproductive_system"
+      ]
+    },
+    {
+      "herb_name": "Moringa",
+      "scientific_name": "Moringa oleifera",
+      "common_indications": [
+        "nutrition",
+        "immunity",
+        "lactation",
+        "energy"
+      ],
+      "ayurvedic_rasa": [
+        "pungent"
+      ],
+      "ayurvedic_virya": "heating",
+      "ayurvedic_category": "Balya, Stanyajanana",
+      "pharmacological_profile": {
+        "nutritive": 0.8,
+        "hypoglycemic": 0.5,
+        "hypotensive": 0.5,
+        "hypolipidemic": 0.5,
+        "galactagogue": 0.6
+      },
+      "safety_concerns": [
+        "hypoglycemia",
+        "hypotension",
+        "laxative effect"
+      ],
+      "contraindicated_conditions": [
+        "hypothyroidism (potential)"
+      ],
+      "organ_tropism": [
+        "general_nutrition",
+        "immune_system"
+      ]
+    },
+    {
+      "herb_name": "Bala",
+      "scientific_name": "Sida cordifolia",
+      "common_indications": [
+        "strength",
+        "immunity",
+        "nervous system",
+        "energy"
+      ],
+      "ayurvedic_rasa": [
+        "sweet"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Balya, Rasayana",
+      "pharmacological_profile": {
+        "stimulant": 0.6,
+        "cardiotonic": 0.5,
+        "adaptogenic": 0.5,
+        "ephedrine_like": 0.7
+      },
+      "safety_concerns": [
+        "cardiovascular stimulation",
+        "hypertension",
+        "insomnia"
+      ],
+      "contraindicated_conditions": [
+        "hypertension",
+        "heart disease",
+        "anxiety"
+      ],
+      "organ_tropism": [
+        "cardiovascular",
+        "nervous_system"
+      ]
+    },
+    {
+      "herb_name": "Vacha",
+      "scientific_name": "Acorus calamus",
+      "common_indications": [
+        "cognitive",
+        "speech",
+        "epilepsy",
+        "mental clarity"
+      ],
+      "ayurvedic_rasa": [
+        "pungent",
+        "bitter"
+      ],
+      "ayurvedic_virya": "heating",
+      "ayurvedic_category": "Medhya",
+      "pharmacological_profile": {
+        "cognitive_enhancer": 0.7,
+        "sedative_like": 0.4,
+        "carcinogenic_concern": 0.6,
+        "hepatotoxic_concern": 0.5
+      },
+      "safety_concerns": [
+        "carcinogenicity (beta-asarone)",
+        "hepatotoxicity",
+        "banned in some countries"
+      ],
+      "contraindicated_conditions": [
+        "pregnancy",
+        "liver disease"
+      ],
+      "organ_tropism": [
+        "nervous_system",
+        "liver"
+      ]
+    },
+    {
+      "herb_name": "Jatamansi",
+      "scientific_name": "Nardostachys jatamansi",
+      "common_indications": [
+        "anxiety",
+        "sleep",
+        "mental health",
+        "hair growth"
+      ],
+      "ayurvedic_rasa": [
+        "bitter",
+        "astringent",
+        "sweet"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Medhya, Nidrajanana",
+      "pharmacological_profile": {
+        "sedative_like": 0.7,
+        "anxiolytic_like": 0.8,
+        "hypotensive": 0.4,
+        "hepatoprotective": 0.5
+      },
+      "safety_concerns": [
+        "sedation",
+        "hypotension",
+        "CNS depression"
+      ],
+      "contraindicated_conditions": [
+        "severe hypotension",
+        "CNS depressant use"
+      ],
+      "organ_tropism": [
+        "nervous_system",
+        "cardiovascular"
+      ]
+    },
+    {
+      "herb_name": "Vidari Kanda",
+      "scientific_name": "Pueraria tuberosa",
+      "common_indications": [
+        "strength",
+        "lactation",
+        "aphrodisiac",
+        "rejuvenation"
+      ],
+      "ayurvedic_rasa": [
+        "sweet"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Balya, Vrishya (aphrodisiac), Stanyajanana",
+      "pharmacological_profile": {
+        "phytoestrogenic": 0.6,
+        "galactagogue": 0.6,
+        "nutritive": 0.7,
+        "adaptogenic": 0.5
+      },
+      "safety_concerns": [
+        "hormone-sensitive conditions",
+        "estrogenic effects"
+      ],
+      "contraindicated_conditions": [
+        "estrogen-dependent cancers"
+      ],
+      "organ_tropism": [
+        "reproductive_system",
+        "endocrine"
+      ]
+    },
+    {
+      "herb_name": "Gokshura",
+      "scientific_name": "Tribulus terrestris",
+      "common_indications": [
+        "kidney stones",
+        "urinary health",
+        "libido",
+        "strength"
+      ],
+      "ayurvedic_rasa": [
+        "sweet"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Vrishya, Mutrala (diuretic)",
+      "pharmacological_profile": {
+        "diuretic": 0.6,
+        "aphrodisiac": 0.5,
+        "testosterone_like": 0.4,
+        "hypoglycemic": 0.4
+      },
+      "safety_concerns": [
+        "hormonal effects",
+        "hypoglycemia",
+        "photosensitivity"
+      ],
+      "contraindicated_conditions": [
+        "hormone-sensitive cancers",
+        "prostate conditions"
+      ],
+      "organ_tropism": [
+        "kidney",
+        "reproductive_system"
+      ]
+    },
+    {
+      "herb_name": "Kalmegh",
+      "scientific_name": "Andrographis paniculata",
+      "common_indications": [
+        "fever",
+        "immunity",
+        "liver health",
+        "infection"
+      ],
+      "ayurvedic_rasa": [
+        "bitter"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Jvaraghna, Krimighna",
+      "pharmacological_profile": {
+        "immunomodulator": 0.8,
+        "hepatoprotective": 0.7,
+        "antipyretic": 0.7,
+        "antiviral": 0.6,
+        "antiplatelet": 0.4
+      },
+      "safety_concerns": [
+        "bleeding risk",
+        "hypotension",
+        "fertility effects",
+        "immunomodulation"
+      ],
+      "contraindicated_conditions": [
+        "pregnancy",
+        "autoimmune diseases",
+        "bleeding disorders"
+      ],
+      "organ_tropism": [
+        "immune_system",
+        "liver"
+      ]
+    },
+    {
+      "herb_name": "Manjistha",
+      "scientific_name": "Rubia cordifolia",
+      "common_indications": [
+        "skin conditions",
+        "blood purification",
+        "menstrual health"
+      ],
+      "ayurvedic_rasa": [
+        "bitter",
+        "astringent",
+        "sweet"
+      ],
+      "ayurvedic_virya": "cooling",
+      "ayurvedic_category": "Raktashodhaka (blood purifier), Varnya",
+      "pharmacological_profile": {
+        "blood_purifier": 0.6,
+        "anti_inflammatory": 0.6,
+        "antiplatelet": 0.4,
+        "hepatoprotective": 0.5,
+        "nephrotoxic_concern": 0.3
+      },
+      "safety_concerns": [
+        "bleeding risk",
+        "kidney stones",
+        "urine discoloration"
+      ],
+      "contraindicated_conditions": [
+        "kidney disease",
+        "bleeding disorders"
+      ],
+      "organ_tropism": [
+        "blood",
+        "skin",
+        "kidney"
+      ]
+    },
+    {
+      "herb_name": "Pippali",
+      "scientific_name": "Piper longum",
+      "common_indications": [
+        "respiratory",
+        "digestion",
+        "bioavailability enhancer"
+      ],
+      "ayurvedic_rasa": [
+        "pungent"
+      ],
+      "ayurvedic_virya": "heating",
+      "ayurvedic_category": "Kasa-swasahara, Deepana, Yogavahi (bioenhancer)",
+      "pharmacological_profile": {
+        "bioenhancer": 0.9,
+        "bronchodilator": 0.6,
+        "hepatoprotective": 0.5,
+        "drug_absorption_enhancer": 0.8
+      },
+      "safety_concerns": [
+        "increases drug absorption",
+        "GI irritation",
+        "drug interaction potential"
+      ],
+      "contraindicated_conditions": [
+        "peptic ulcer",
+        "acid reflux"
+      ],
+      "organ_tropism": [
+        "digestive_system",
+        "respiratory_system",
+        "bioavailability"
+      ]
+    },
+    {
+      "herb_name": "Chyawanprash",
+      "scientific_name": "Polyherbal formulation (Amla-based)",
+      "common_indications": [
+        "immunity",
+        "energy",
+        "respiratory health",
+        "rejuvenation"
+      ],
+      "ayurvedic_rasa": [
+        "sweet",
+        "sour"
+      ],
+      "ayurvedic_virya": "heating",
+      "ayurvedic_category": "Rasayana",
+      "pharmacological_profile": {
+        "immunomodulator": 0.7,
+        "antioxidant": 0.8,
+        "adaptogenic": 0.6,
+        "nutritive": 0.8,
+        "high_sugar_content": 0.9
+      },
+      "safety_concerns": [
+        "high sugar content",
+        "hypoglycemia risk with diabetes meds",
+        "allergy potential"
+      ],
+      "contraindicated_conditions": [
+        "uncontrolled diabetes",
+        "allergy to ingredients"
+      ],
+      "organ_tropism": [
+        "immune_system",
+        "respiratory_system",
+        "general"
+      ]
+    }
+  ],
+  "metadata": {
+    "version": "1.0",
+    "date_created": "2025-11-27",
+    "total_herbs": 28,
+    "profile_scoring_scale": "0.0 (no effect) to 1.0 (strong effect)",
+    "data_sources": [
+      "Traditional Ayurvedic texts (Charaka Samhita, Sushruta Samhita)",
+      "Bhavaprakasha Samhita",
+      "Modern pharmacological research",
+      "Clinical studies",
+      "Dravyaguna Vijñāna (Ayurvedic pharmacology)",
+      "IMPPAT Database",
+      "Peer-reviewed publications"
+    ],
+    "note": "Pharmacological profiles are approximate classifications for decision support. Clinical validation required."
+  }
+}

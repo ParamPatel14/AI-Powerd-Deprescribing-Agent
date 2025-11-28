@@ -1,0 +1,39 @@
+herb_name,scientific_name,interacting_drug_class,specific_drugs,interaction_type,mechanism,severity,clinical_effect,evidence_level,source_reference
+Ashwagandha,Withania somnifera,Immunosuppressants,"Cyclosporine, Tacrolimus, Azathioprine",Pharmacodynamic,Immune stimulation may counteract immunosuppression,Moderate,Reduced immunosuppressive effect,Theoretical,MSK 2024
+Ashwagandha,Withania somnifera,Sedatives/CNS Depressants,"Benzodiazepines, Barbiturates, Zolpidem",Pharmacodynamic,Additive sedative effects,Moderate,"Increased sedation, drowsiness, risk of falls",Clinical,NCCIH 2023
+Ashwagandha,Withania somnifera,Thyroid Hormones,Levothyroxine,Pharmacodynamic,May increase thyroid hormone levels,Moderate,Risk of hyperthyroidism,Clinical,PubMed 2022
+Ashwagandha,Withania somnifera,CYP3A4 Substrates,"Midazolam, Alprazolam, Simvastatin, Calcium channel blockers",Pharmacokinetic,CYP3A4 induction - increases drug metabolism,Minor-Moderate,Reduced drug efficacy,In vitro/Clinical,Frontiers Pharmacol 2022
+Ashwagandha,Withania somnifera,Antidiabetic Agents,"Metformin, Insulin, Sulfonylureas",Pharmacodynamic,Additive hypoglycemic effect,Moderate,Increased risk of hypoglycemia,Clinical,Clinical studies 2021
+Ashwagandha,Withania somnifera,Antihypertensives,"ACE inhibitors, ARBs, Beta-blockers",Pharmacodynamic,Additive blood pressure lowering,Moderate,Risk of hypotension,Theoretical/Clinical,Consensus 2024
+Turmeric/Curcumin,Curcuma longa,Anticoagulants/Antiplatelets,"Warfarin, Aspirin, Clopidogrel, Heparin",Pharmacodynamic,"Antiplatelet effects, bleeding risk",Major,Increased bleeding risk,Clinical,"NCCIH 2023, PMC systematic reviews"
+Turmeric/Curcumin,Curcuma longa,Hepatotoxic Drugs,"Acetaminophen, Methotrexate, Statins at high dose",Pharmacodynamic,Additive liver toxicity,Major,Increased hepatotoxicity risk,Clinical,ScienceDirect 2024
+Turmeric/Curcumin,Curcuma longa,Antidiabetic Agents,"Metformin, Insulin, Glyburide",Pharmacodynamic,Additive hypoglycemic effect,Moderate,Increased hypoglycemia risk,Clinical,Clinical trials 2023
+Turmeric/Curcumin,Curcuma longa,Chemotherapy Agents,"Cyclophosphamide, Camptothecin",Pharmacodynamic,Antioxidant effects may interfere with oxidative damage mechanism,Moderate,Potential reduced chemotherapy efficacy,Preclinical/Theoretical,ASCO Post 2024
+Turmeric/Curcumin,Curcuma longa,CYP450 Substrates,"Multiple CYP2C9, CYP3A4 substrates",Pharmacokinetic,CYP enzyme inhibition,Minor-Moderate,Altered drug metabolism,In vitro,PMC 2015
+Triphala,"Terminalia chebula, Terminalia bellirica, Emblica officinalis",Antidiabetic Agents,"Metformin, Insulin, Sulfonylureas",Pharmacodynamic,May lower blood glucose,Moderate,Risk of hypoglycemia,Clinical,Ayurvedic pharmacology 2023
+Triphala,"Terminalia chebula, Terminalia bellirica, Emblica officinalis",Anticoagulants,Warfarin,Pharmacodynamic,High vitamin C content may affect INR,Moderate,Altered anticoagulation,Theoretical,Clinical consideration 2022
+Triphala,"Terminalia chebula, Terminalia bellirica, Emblica officinalis",Laxatives,"Senna, Bisacodyl, Docusate",Pharmacodynamic,Additive laxative effect,Moderate,"Excessive diarrhea, electrolyte imbalance",Clinical,Clinical reports
+Brahmi,Bacopa monnieri,Anticholinergics,"Oxybutynin, Tolterodine, Diphenhydramine",Pharmacodynamic,Cholinergic activity opposes anticholinergic effects,Moderate,Reduced drug efficacy,Theoretical,Pharmacology reviews 2023
+Brahmi,Bacopa monnieri,Thyroid Hormones,Levothyroxine,Pharmacodynamic,May increase T4 levels,Minor-Moderate,Risk of hyperthyroidism,Animal studies,Preclinical 2022
+Brahmi,Bacopa monnieri,CYP450 Substrates,"CYP2C9, CYP2C19, CYP3A4 substrates",Pharmacokinetic,CYP enzyme inhibition,Minor,Altered drug levels,In vitro,In vitro studies 2021
+Holy Basil (Tulsi),Ocimum sanctum,Antidiabetic Agents,"Insulin, Metformin, Sulfonylureas",Pharmacodynamic,Hypoglycemic effect,Moderate,Risk of hypoglycemia,Clinical,Clinical studies 2023
+Holy Basil (Tulsi),Ocimum sanctum,Anticoagulants,"Warfarin, Aspirin",Pharmacodynamic,Antiplatelet activity,Moderate,Increased bleeding risk,Theoretical/Preclinical,Pharmacology 2022
+Guggul,Commiphora mukul,Thyroid Hormones,Levothyroxine,Pharmacodynamic,May increase thyroid activity,Moderate,Risk of hyperthyroidism,Clinical,Clinical reports 2022
+Guggul,Commiphora mukul,Anticoagulants,Warfarin,Pharmacodynamic,May potentiate anticoagulant effects,Major,Increased bleeding risk,Case reports,Clinical case reports
+Guggul,Commiphora mukul,CYP3A4 Substrates,"Diltiazem, Propranolol, Midazolam",Pharmacokinetic,CYP3A4 induction,Moderate,Reduced drug efficacy,In vitro/Clinical,Pharmacokinetic studies 2021
+Shankhpushpi,Convolvulus pluricaulis,Antiepileptics,Phenytoin,Pharmacokinetic,Decreased phenytoin levels (documented case),Major,Loss of seizure control,Case report,Epilepsia case report 2002
+Shankhpushpi,Convolvulus pluricaulis,Sedatives,"Benzodiazepines, Z-drugs",Pharmacodynamic,Additive sedative effects,Moderate,Increased sedation,Theoretical,Pharmacology 2023
+Ginger,Zingiber officinale,Anticoagulants/Antiplatelets,"Warfarin, Aspirin, Clopidogrel",Pharmacodynamic,Antiplatelet effects,Moderate,Increased bleeding risk,Clinical,"NCCIH 2023, PMC reviews"
+Ginger,Zingiber officinale,Antidiabetic Agents,"Insulin, Metformin",Pharmacodynamic,May lower blood glucose,Moderate,Risk of hypoglycemia,Clinical,Clinical trials 2022
+Boswellia (Shallaki),Boswellia serrata,Immunosuppressants,"Cyclosporine, Tacrolimus",Pharmacodynamic,Immune modulation may interfere,Moderate,Altered immunosuppression,Theoretical,MSK database
+Boswellia (Shallaki),Boswellia serrata,NSAIDs,"Ibuprofen, Naproxen, Diclofenac",Pharmacodynamic,"Additive anti-inflammatory effects, GI risk",Minor-Moderate,Increased GI side effects,Theoretical,Clinical pharmacology 2023
+Neem,Azadirachta indica,Immunosuppressants,"Cyclosporine, Prednisone, Azathioprine",Pharmacodynamic,Immune stimulation may counteract,Moderate,Reduced immunosuppressive effect,Theoretical,Herbal medicine reviews 2022
+Neem,Azadirachta indica,Antidiabetic Agents,"Insulin, Metformin, Sulfonylureas",Pharmacodynamic,Hypoglycemic effect,Moderate,Risk of hypoglycemia,Clinical,Clinical studies 2023
+Neem,Azadirachta indica,Lithium,Lithium carbonate,Pharmacokinetic,Diuretic effect may increase lithium levels,Major,Risk of lithium toxicity,Theoretical,Drug interaction databases
+Arjuna,Terminalia arjuna,Antihypertensives,"ACE inhibitors, Beta-blockers, Calcium channel blockers",Pharmacodynamic,Additive blood pressure lowering,Moderate,Risk of hypotension,Clinical,Clinical trials 2022
+Arjuna,Terminalia arjuna,Anticoagulants,"Warfarin, Aspirin",Pharmacodynamic,Antiplatelet activity,Moderate,Increased bleeding risk,Theoretical,Pharmacology reviews 2023
+Arjuna,Terminalia arjuna,Cardiac Glycosides,Digoxin,Pharmacodynamic,May enhance cardiac effects,Moderate,Risk of digoxin toxicity,Theoretical,Cardiology reviews 2022
+Shatavari,Asparagus racemosus,Diuretics,"Furosemide, Hydrochlorothiazide",Pharmacodynamic,Additive diuretic effect,Moderate,"Dehydration, electrolyte imbalance",Theoretical,Pharmacology 2023
+Shatavari,Asparagus racemosus,Hormone Therapy,"Estrogen replacement, Tamoxifen",Pharmacodynamic,Phytoestrogen activity,Moderate,May interfere with hormone therapy,Theoretical,Oncology reviews 2022
+AYUSH-64,"Alstonia scholaris, Picrorhiza kurroa, Swertia chirata, Caesalpinia crista",CYP2C8 Substrates,"Repaglinide, Paclitaxel, Rosiglitazone",Pharmacokinetic,CYP2C8 inhibition,Moderate,"Increased drug levels, toxicity risk",In vitro,Frontiers Pharmacol 2022
+AYUSH-64,"Alstonia scholaris, Picrorhiza kurroa, Swertia chirata, Caesalpinia crista",Antiviral Agents,Remdesivir,Pharmacokinetic,Potential CYP enzyme interaction,Minor-Moderate,Altered antiviral drug levels,In vitro,COVID-19 studies 2022
