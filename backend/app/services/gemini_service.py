@@ -427,34 +427,46 @@ Return ONLY valid JSON array of strings:
                 "Simplify regimen to reduce polypharmacy burden."
             ]
         
-    def get_drug_information(self, drug_name: str) -> Dict:
-        """Extract detailed drug information using Gemini with strong JSON guarantees."""
-
+    def get_drug_information_with_context(
+        self, 
+        drug_name: str, 
+        clinical_context: str,
+        patient_age: int,
+        comorbidities: List[str]
+    ) -> Dict:
+        """
+        Extract drug information with clinical context from Beers/STOPP
+        """
+        
         prompt = f"""
-    You are a clinical pharmacologist. Provide comprehensive information about the medication: {drug_name}
+    You are a clinical pharmacologist. A medication has been flagged in clinical guidelines.
 
-    Return a JSON object with this EXACT structure:
+    {clinical_context}
+
+    Patient: {patient_age} years old
+    Comorbidities: {', '.join(comorbidities) if comorbidities else 'None'}
+
+    Based on this clinical context, provide tapering guidance:
 
     {{
-    "drug_class": "Primary drug class (e.g., Benzodiazepine, SSRI, PPI, Beta-blocker)",
-    "risk_profile": "High-risk" or "Standard" or "Low-risk",
-    "taper_strategy_name": "Name of recommended tapering approach",
-    "step_logic": "Detailed tapering instructions (e.g., 'Reduce by 25% every 2 weeks' or 'Ashton substitution protocol')",
-    "withdrawal_symptoms": "Common withdrawal symptoms (comma-separated)",
-    "monitoring_frequency": "Recommended monitoring frequency during taper",
-    "pause_criteria": "When to pause tapering",
+    "drug_class": "Primary drug class",
+    "risk_profile": "High-risk or Standard",
+    "taper_strategy_name": "Appropriate tapering approach",
+    "step_logic": "Detailed tapering instructions",
+    "withdrawal_symptoms": "symptom1, symptom2, symptom3",
+    "monitoring_frequency": "Recommended frequency",
+    "pause_criteria": "When to pause",
     "requires_taper": true or false,
-    "typical_duration_weeks": 4 to 24,
-    "special_considerations": "Any special considerations for elderly/frail patients"
+    "typical_duration_weeks": 4-24,
+    "special_considerations": "Notes for elderly/frail patients"
     }}
 
-    Guidelines:
-    1. If this is a HIGH-RISK medication (benzodiazepines, SSRIs, SNRIs, opioids, corticosteroids), set requires_taper: true
-    2. For standard medications (statins, ACE inhibitors, metformin), requires_taper: false
-    3. Withdrawal symptoms must be specific and relevant to the drug class
-    4. Output must consider elderly deprescribing safety
-    5. If drug name is unknown or misspelled, infer based on closest known medication
-    6. Return ONLY valid JSON — no commentary, no markdown.
+    Since this drug is in Beers/STOPP, be EXTRA cautious about:
+    1. Withdrawal risks in elderly patients
+    2. Need for gradual tapering vs. abrupt discontinuation
+    3. Monitoring requirements
+
+    Return ONLY valid JSON.
     """
 
         try:
@@ -501,23 +513,108 @@ Return ONLY valid JSON array of strings:
         except json.JSONDecodeError as e:
             print(f"❌ JSON parsing error for {drug_name}: {e}")
             print(f"Raw response: {response.text[:200]}")
-            return self._get_fallback_drug_info(drug_name)
+            return self._get_fallback_drug_info_with_intelligence(drug_name)
             
         except Exception as e:
             print(f"❌ Gemini API error for {drug_name}: {e}")
-            return self._get_fallback_drug_info(drug_name)
+            return self._get_fallback_drug_info_with_intelligence(drug_name)
 
-    def _get_fallback_drug_info(self, drug_name: str) -> Dict:
-        """Fallback drug information if Gemini fails"""
+    def _get_fallback_drug_info_with_intelligence(self, drug_name: str) -> Dict:
+        """
+        Intelligent fallback based on drug name patterns
+        """
+        drug_lower = drug_name.lower()
+        
+        # Pattern matching for common drug classes
+        patterns = {
+            # Dementia drugs - NO taper needed
+            ('donepezil', 'aricept', 'memantine', 'namenda', 'rivastigmine', 'exelon', 'galantamine'): {
+                'drug_class': 'Dementia medication',
+                'risk_profile': 'Standard',
+                'requires_taper': False,
+                'typical_duration_weeks': 0,
+                'step_logic': 'Can be discontinued without tapering in most cases',
+                'withdrawal_symptoms': 'Possible cognitive decline, return of dementia symptoms',
+                'special_considerations': 'Discontinuation should be monitored but tapering not required'
+            },
+            
+            # Benzodiazepines - REQUIRE taper
+            ('alprazolam', 'xanax', 'lorazepam', 'ativan', 'diazepam', 'valium', 'clonazepam', 'klonopin'): {
+                'drug_class': 'Benzodiazepine',
+                'risk_profile': 'High-risk',
+                'requires_taper': True,
+                'typical_duration_weeks': 12,
+                'step_logic': 'Ashton protocol - very gradual 10% reduction every 2 weeks',
+                'withdrawal_symptoms': 'Anxiety, insomnia, tremors, seizures, confusion'
+            },
+            
+            # SSRIs - REQUIRE taper
+            ('sertraline', 'zoloft', 'fluoxetine', 'prozac', 'paroxetine', 'paxil', 'citalopram', 'celexa', 'escitalopram', 'lexapro'): {
+                'drug_class': 'SSRI Antidepressant',
+                'risk_profile': 'High-risk',
+                'requires_taper': True,
+                'typical_duration_weeks': 8,
+                'step_logic': 'Hyperbolic taper - reduce by 25% every 2-4 weeks',
+                'withdrawal_symptoms': 'Brain zaps, dizziness, nausea, irritability, flu-like symptoms'
+            },
+            
+            # Statins - NO taper needed
+            ('atorvastatin', 'lipitor', 'simvastatin', 'zocor', 'rosuvastatin', 'crestor', 'pravastatin'): {
+                'drug_class': 'Statin',
+                'risk_profile': 'Low-risk',
+                'requires_taper': False,
+                'typical_duration_weeks': 0,
+                'step_logic': 'Can be stopped abruptly',
+                'withdrawal_symptoms': 'None typically'
+            },
+            
+            # ACE Inhibitors - Minimal taper
+            ('lisinopril', 'enalapril', 'ramipril', 'perindopril', 'benazepril'): {
+                'drug_class': 'ACE Inhibitor',
+                'risk_profile': 'Standard',
+                'requires_taper': False,
+                'typical_duration_weeks': 1,
+                'step_logic': 'Monitor blood pressure for rebound hypertension',
+                'withdrawal_symptoms': 'Possible rebound hypertension'
+            },
+            
+            # PPIs - Minimal taper
+            ('omeprazole', 'prilosec', 'pantoprazole', 'protonix', 'esomeprazole', 'nexium', 'lansoprazole'): {
+                'drug_class': 'Proton Pump Inhibitor',
+                'risk_profile': 'Standard',
+                'requires_taper': True,
+                'typical_duration_weeks': 4,
+                'step_logic': 'Reduce dose by 50% for 2 weeks, then switch to H2 blocker if needed',
+                'withdrawal_symptoms': 'Rebound acid hypersecretion'
+            }
+        }
+        
+        # Check patterns
+        for drug_names, info in patterns.items():
+            if any(pattern in drug_lower for pattern in drug_names):
+                return {
+                    'drug_class': info['drug_class'],
+                    'risk_profile': info.get('risk_profile', 'Standard'),
+                    'taper_strategy_name': 'Evidence-based protocol',
+                    'step_logic': info['step_logic'],
+                    'withdrawal_symptoms': info.get('withdrawal_symptoms', 'General discomfort'),
+                    'monitoring_frequency': 'Weekly',
+                    'pause_criteria': 'Severe symptoms or patient distress',
+                    'requires_taper': info['requires_taper'],
+                    'typical_duration_weeks': info['typical_duration_weeks'],
+                    'special_considerations': info.get('special_considerations', 'Monitor elderly patients closely')
+                }
+        
+        # Generic fallback
         return {
             "drug_class": "Unknown",
             "risk_profile": "Standard",
             "taper_strategy_name": "Gradual Reduction",
-            "step_logic": "Reduce by 25% every 2 weeks",
+            "step_logic": "Reduce by 25% every 2 weeks with monitoring",
             "withdrawal_symptoms": "Possible return of symptoms, general discomfort",
             "monitoring_frequency": "Weekly",
             "pause_criteria": "Severe symptoms or patient distress",
-            "requires_taper": False,
+            "requires_taper": True,
             "typical_duration_weeks": 4,
-            "special_considerations": "Consult healthcare provider for personalized plan"
+            "special_considerations": "Consult healthcare provider for personalized guidance"
         }

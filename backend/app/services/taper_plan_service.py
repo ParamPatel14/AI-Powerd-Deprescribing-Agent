@@ -29,157 +29,271 @@ class TaperPlanService:
             print("ℹ️  No Gemini API key provided. Using basic taper schedules.")
     
     def get_taper_plan(self, request: TaperPlanRequest) -> TaperPlanResponse:
-        """Generate detailed taper plan (with Gemini if available)"""
+        """Generate detailed taper plan (with proper logic)"""
         
         try:
             drug_lower = request.drug_name.lower()
             
-            # Find drug in tapering dataset
+            # ===== STEP 1: Check tapering_rules_dataset.csv (10 drugs) =====
             match = self.tapering_df[self.tapering_df['drug_name'] == drug_lower]
             
-            # ===== GEMINI ENHANCEMENT: Extract drug info if not in database =====
-            if match.empty:
-                print(f"⚠️  Drug '{request.drug_name}' not found in database.")
-                
-                # Check if Gemini is available
-                if self.use_gemini and self.gemini_service:
-                    print(f"🤖 Using Gemini to extract drug information for {request.drug_name}...")
-                    
-                    try:
-                        # Get drug information from Gemini
-                        drug_info = self.gemini_service.get_drug_information(request.drug_name)
-                        
-                        # Check if drug requires tapering
-                        if not drug_info.get('requires_taper', True):
-                            print(f"ℹ️ {request.drug_name} does not require tapering per Gemini analysis")
-                            return self._no_taper_needed_plan(request, drug_info)
-                        
-                        # Create a synthetic row using Gemini data
-                        print(f"✅ Creating drug profile from Gemini data")
-                        row = pd.Series({
-                            'drug_name': request.drug_name,
-                            'drug_class': drug_info.get('drug_class', 'Unknown'),
-                            'risk_profile': drug_info.get('risk_profile', 'Standard'),
-                            'taper_strategy_name': drug_info.get('taper_strategy_name', 'Gradual Reduction'),
-                            'step_logic': drug_info.get('step_logic', 'Reduce by 25% every 2 weeks'),
-                            'withdrawal_symptoms': drug_info.get('withdrawal_symptoms', 'General discomfort'),
-                            'monitoring_frequency': drug_info.get('monitoring_frequency', 'Weekly'),
-                            'pause_criteria': drug_info.get('pause_criteria', 'Severe symptoms'),
-                            'base_taper_duration_weeks': drug_info.get('typical_duration_weeks', 4)
-                        })
-                        
-                        print(f"✅ Gemini-enhanced profile created for {request.drug_name}")
-                        print(f"   Class: {row['drug_class']}, Risk: {row['risk_profile']}")
-                        
-                    except Exception as e:
-                        print(f"❌ Gemini drug info extraction failed: {e}")
-                        import traceback
-                        traceback.print_exc()
-                        print(f"🔄 Falling back to generic plan")
-                        return self._generic_taper_plan(request)
-                else:
-                    print(f"⚠️  Gemini not available. Using generic plan.")
-                    return self._generic_taper_plan(request)
-            else:
+            if not match.empty:
+                print(f"✅ Found {request.drug_name} in tapering database (one of the 10)")
                 row = match.iloc[0]
-                print(f"✅ Found {request.drug_name} in database")
+                # Continue with existing logic...
+                return self._generate_plan_from_row(row, request)
             
-            # Rest of the method continues as normal...
-            # Get frailty adjustment
-            taper_multiplier = 1.0
-            if request.patient_cfs_score:
-                cfs_row = self.cfs_df[self.cfs_df['cfs_score'] == request.patient_cfs_score]
-                if not cfs_row.empty:
-                    taper_multiplier = cfs_row.iloc[0]['taper_speed_multiplier']
+            # ===== STEP 2: Drug NOT in 10 - Check Beers/STOPP =====
+            print(f"⚠️  Drug '{request.drug_name}' not in tapering database")
+            print(f"🔍 Checking if it's in Beers or STOPP criteria...")
             
-            # Calculate duration
-            base_duration = int(row.get('base_taper_duration_weeks', 8))
-            if request.duration_on_medication == "long_term":
-                base_duration = max(base_duration, 8)
-            else:
-                base_duration = max(base_duration // 2, 4)
+            # Check Beers Criteria
+            beers_info = self._check_beers_for_drug(request.drug_name)
+            
+            # Check STOPP Criteria  
+            stopp_info = self._check_stopp_for_drug(request.drug_name)
+            
+            # ===== STEP 3: Decide if tapering is needed =====
+            if beers_info or stopp_info:
+                print(f"✅ {request.drug_name} found in clinical criteria")
                 
-            adjusted_duration = int(base_duration / taper_multiplier)
-            
-            # Generate steps
-            steps = []
-            patient_education = []
-            pause_criteria = []
-            reversal_criteria = []
-            
-            if self.use_gemini and self.gemini_service:
-                try:
-                    print(f"🤖 Generating detailed AI taper schedule...")
-                    gemini_schedule = self.gemini_service.generate_detailed_taper_schedule(
-                        drug_name=request.drug_name,
-                        drug_class=row['drug_class'],
-                        current_dose=request.current_dose,
-                        duration_on_med=request.duration_on_medication,
-                        taper_strategy=row['taper_strategy_name'],
-                        step_logic=row['step_logic'],
-                        total_weeks=adjusted_duration,
-                        patient_age=request.patient_age,
-                        cfs_score=request.patient_cfs_score or 3,
-                        comorbidities=request.comorbidities,
-                        withdrawal_symptoms=row['withdrawal_symptoms']
+                if beers_info:
+                    print(f"   Beers: {beers_info.get('rationale', 'N/A')}")
+                if stopp_info:
+                    print(f"   STOPP: {stopp_info.get('criterion', 'N/A')}")
+                
+                # Use Gemini to generate taper plan with context
+                if self.use_gemini and self.gemini_service:
+                    return self._generate_plan_with_gemini_context(
+                        request, 
+                        beers_info, 
+                        stopp_info
                     )
-                    
-                    steps = [TaperStep(**step) for step in gemini_schedule.get('taper_steps', [])]
-                    patient_education = gemini_schedule.get('patient_education', [])
-                    pause_criteria = gemini_schedule.get('pause_criteria', [])
-                    reversal_criteria = gemini_schedule.get('success_indicators', [])
-                    
-                    print(f"✅ AI generated {len(steps)} taper steps")
-                    
-                except Exception as e:
-                    print(f"⚠️  Gemini schedule generation failed: {e}")
-                    print("🔄 Using basic taper generation")
-            
-            # Fallback to basic generation if needed
-            if not steps:
-                print(f"📋 Generating basic taper plan")
-                steps = self._generate_basic_steps(
-                    row['step_logic'],
-                    row['withdrawal_symptoms'],
-                    adjusted_duration,
-                    request.current_dose,
-                    row['drug_class']
-                )
-                patient_education = self._create_patient_education(
-                    request.drug_name, row['drug_class'], row['withdrawal_symptoms']
-                )
-                pause_criteria = [str(row['pause_criteria']), "Severe withdrawal symptoms", "Patient request"]
-                reversal_criteria = [
-                    "Unmanageable symptoms lasting >1 week",
-                    "Return of severe symptoms",
-                    "Medical emergency"
-                ]
-            
-            # Monitoring schedule
-            monitoring_schedule = self._create_monitoring_schedule(
-                row['monitoring_frequency'],
-                adjusted_duration,
-                row['withdrawal_symptoms']
-            )
-            
-            return TaperPlanResponse(
-                drug_name=request.drug_name,
-                drug_class=row['drug_class'],
-                risk_profile=row['risk_profile'],
-                taper_strategy=row['taper_strategy_name'],
-                total_duration_weeks=adjusted_duration,
-                steps=steps,
-                pause_criteria=pause_criteria,
-                reversal_criteria=reversal_criteria,
-                monitoring_schedule=monitoring_schedule,
-                patient_education=patient_education
-            )
+                else:
+                    # Fallback: Clinical criteria taper
+                    return self._generate_clinical_criteria_taper(
+                        request,
+                        beers_info,
+                        stopp_info
+                    )
+            else:
+                print(f"⚠️  {request.drug_name} not in Beers/STOPP")
+                print(f"   Likely safe to discontinue with monitoring")
+                return self._generate_safe_discontinuation_plan(request)
         
         except Exception as e:
             print(f"❌ Error in get_taper_plan: {e}")
             import traceback
             traceback.print_exc()
             return self._emergency_fallback_plan(request)
+
+# ===== NEW HELPER METHODS =====
+
+    def _check_beers_for_drug(self, drug_name: str):
+        """Check if drug is in Beers Criteria"""
+        try:
+            from app.utils.data_loader import load_beers_data
+            beers_df = load_beers_data()
+            
+            # Search in drug_name column (case-insensitive)
+            drug_lower = drug_name.lower()
+            matches = beers_df[beers_df['drug_name'].str.lower().str.contains(drug_lower, na=False)]
+            
+            if not matches.empty:
+                row = matches.iloc[0]
+                return {
+                    'table': row.get('table', 'Unknown'),
+                    'therapeutic_category': row.get('therapeutic_category', 'Unknown'),
+                    'rationale': row.get('rationale', 'Potentially inappropriate'),
+                    'recommendation': row.get('recommendation', 'Avoid'),
+                    'quality': row.get('quality', 'Unknown'),
+                    'strength': row.get('strength', 'Unknown')
+                }
+            return None
+        except Exception as e:
+            print(f"   Error checking Beers: {e}")
+            return None
+
+    def _check_stopp_for_drug(self, drug_name: str):
+        """Check if drug is in STOPP Criteria"""
+        try:
+            from app.utils.data_loader import load_stopp_data
+            stopp_df = load_stopp_data()
+            
+            # Search in drug/class column
+            drug_lower = drug_name.lower()
+            matches = stopp_df[stopp_df['drug_class'].str.lower().str.contains(drug_lower, na=False)]
+            
+            if not matches.empty:
+                row = matches.iloc[0]
+                return {
+                    'criterion_id': row.get('criterion_id', 'Unknown'),
+                    'system': row.get('system', 'Unknown'),
+                    'criterion': row.get('criterion', 'Potentially inappropriate'),
+                    'action': row.get('action', 'Review'),
+                    'condition': row.get('condition', 'N/A')
+                }
+            return None
+        except Exception as e:
+            print(f"   Error checking STOPP: {e}")
+            return None
+
+    def _generate_plan_with_gemini_context(self, request, beers_info, stopp_info):
+        """Use Gemini with clinical context from Beers/STOPP"""
+        
+        print(f"🤖 Using Gemini to generate taper plan with clinical context...")
+        
+        # Build context string
+        context = f"Drug: {request.drug_name}\n"
+        
+        if beers_info:
+            context += f"\nBeers Criteria:\n"
+            context += f"- Category: {beers_info['therapeutic_category']}\n"
+            context += f"- Rationale: {beers_info['rationale']}\n"
+            context += f"- Recommendation: {beers_info['recommendation']}\n"
+            context += f"- Quality of Evidence: {beers_info['quality']}\n"
+        
+        if stopp_info:
+            context += f"\nSTOPP Criteria:\n"
+            context += f"- System: {stopp_info['system']}\n"
+            context += f"- Criterion: {stopp_info['criterion']}\n"
+            context += f"- Action: {stopp_info['action']}\n"
+        
+        # Get drug info from Gemini with context
+        try:
+            drug_info = self.gemini_service.get_drug_information_with_context(
+                drug_name=request.drug_name,
+                clinical_context=context,
+                patient_age=request.patient_age,
+                comorbidities=request.comorbidities
+            )
+            
+            # Check if tapering is needed
+            if not drug_info.get('requires_taper', True):
+                print(f"ℹ️  {request.drug_name} does not require tapering per Gemini analysis")
+                return self._no_taper_needed_plan(request, drug_info)
+            
+            # Create synthetic row for taper generation
+            row = pd.Series({
+                'drug_name': request.drug_name,
+                'drug_class': drug_info.get('drug_class', 'Unknown'),
+                'risk_profile': drug_info.get('risk_profile', 'Standard'),
+                'taper_strategy_name': drug_info.get('taper_strategy_name', 'Gradual Reduction'),
+                'step_logic': drug_info.get('step_logic', 'Reduce by 25% every 2 weeks'),
+                'withdrawal_symptoms': drug_info.get('withdrawal_symptoms', 'General discomfort'),
+                'monitoring_frequency': drug_info.get('monitoring_frequency', 'Weekly'),
+                'pause_criteria': drug_info.get('pause_criteria', 'Severe symptoms'),
+                'base_taper_duration_weeks': drug_info.get('typical_duration_weeks', 4)
+            })
+            
+            print(f"✅ Gemini-generated profile: {row['drug_class']}, Risk: {row['risk_profile']}")
+            
+            # Continue with normal taper generation
+            return self._generate_plan_from_row(row, request)
+            
+        except Exception as e:
+            print(f"❌ Gemini generation failed: {e}")
+            import traceback
+            traceback.print_exc()
+            return self._generate_clinical_criteria_taper(request, beers_info, stopp_info)
+
+    def _generate_clinical_criteria_taper(self, request, beers_info, stopp_info):
+        """Generate taper plan based on Beers/STOPP without Gemini"""
+        
+        # Determine drug class from Beers/STOPP
+        if beers_info:
+            drug_class = beers_info['therapeutic_category']
+        elif stopp_info:
+            drug_class = stopp_info['system']
+        else:
+            drug_class = "Unknown"
+        
+        # Simple classification
+        high_risk_classes = [
+            'Benzodiazepine', 'Anticholinergic', 'Antidepressant', 
+            'Antipsychotic', 'Opioid', 'Sedative'
+        ]
+        
+        requires_slow_taper = any(risk in drug_class for risk in high_risk_classes)
+        
+        if requires_slow_taper:
+            duration = 8
+            strategy = "Gradual reduction due to high-risk classification"
+            symptoms = "Potential withdrawal symptoms - monitor closely"
+        else:
+            duration = 2
+            strategy = "Gradual discontinuation with monitoring"
+            symptoms = "Minimal withdrawal expected"
+        
+        steps = self._generate_basic_steps(
+            step_logic=f"Reduce by 25% every {duration//4} weeks",
+            symptoms=symptoms,
+            duration=duration,
+            current_dose=request.current_dose,
+            drug_class=drug_class
+        )
+        
+        return TaperPlanResponse(
+            drug_name=request.drug_name,
+            drug_class=drug_class,
+            risk_profile="Based on Beers/STOPP",
+            taper_strategy=strategy,
+            total_duration_weeks=duration,
+            steps=steps,
+            pause_criteria=["Severe symptoms", "Patient distress"],
+            reversal_criteria=["Unmanageable symptoms"],
+            monitoring_schedule={
+                "Weekly": ["Monitor for withdrawal symptoms", "Assess patient tolerance"]
+            },
+            patient_education=[
+                f"{request.drug_name} was identified in clinical guidelines as potentially inappropriate",
+                "Your healthcare provider has determined it's appropriate to reduce/stop this medication",
+                "Follow the schedule and report any concerning symptoms immediately"
+            ]
+        )
+
+    def _generate_safe_discontinuation_plan(self, request):
+        """For drugs NOT in Beers/STOPP - likely safe to stop"""
+    
+        return TaperPlanResponse(
+            drug_name=request.drug_name,
+            drug_class="Not classified as high-risk",
+            risk_profile="Standard",
+            taper_strategy="Safe discontinuation",
+            total_duration_weeks=1,
+            steps=[
+                TaperStep(
+                    week=1,
+                    dose="Current dose",
+                    percentage_of_original=100,
+                    instructions=f"{request.drug_name} is not classified as high-risk for withdrawal. May be discontinued with medical supervision.",
+                    monitoring="Monitor for return of symptoms being treated",
+                    withdrawal_symptoms_to_watch=["Return of original symptoms"]
+                ),
+                TaperStep(
+                    week=2,
+                    dose="STOP",
+                    percentage_of_original=0,
+                    instructions="Medication discontinued. Continue monitoring.",
+                    monitoring="Follow up with healthcare provider in 2-4 weeks",
+                    withdrawal_symptoms_to_watch=["Any new symptoms"]
+                )
+            ],
+            pause_criteria=["Return of symptoms"],
+            reversal_criteria=["Medical necessity"],
+            monitoring_schedule={
+                "Week 1-2": ["Monitor for return of original symptoms"],
+                "Week 3-4": ["Follow-up assessment with healthcare provider"]
+            },
+            patient_education=[
+                f"{request.drug_name} was not identified in high-risk medication lists",
+                "It can likely be stopped safely with monitoring",
+                "Always inform your healthcare provider before stopping any medication",
+                "Report any concerning symptoms immediately"
+            ]
+        )
+
+    
 
 
     def _no_taper_needed_plan(self, request: TaperPlanRequest, drug_info: Dict) -> TaperPlanResponse:
@@ -399,5 +513,114 @@ class TaperPlanService:
                 "Always inform your doctor before stopping any medication.",
                 drug_info.get('special_considerations', 'Monitor as directed.')
             ]
+        )
+    def _generate_plan_from_row(self, row, request: TaperPlanRequest) -> TaperPlanResponse:
+        """Generate plan from database row (for the 10 drugs in CSV)"""
+        
+        # Get frailty adjustment
+        taper_multiplier = 1.0
+        if request.patient_cfs_score:
+            cfs_row = self.cfs_df[self.cfs_df['cfs_score'] == request.patient_cfs_score]
+            if not cfs_row.empty:
+                taper_multiplier = cfs_row.iloc[0]['taper_speed_multiplier']
+                print(f"   CFS {request.patient_cfs_score}: Taper multiplier = {taper_multiplier}")
+        
+        # Calculate duration
+        base_duration = int(row.get('base_taper_duration_weeks', 8))
+        if request.duration_on_medication == "long_term":
+            base_duration = max(base_duration, 8)
+        else:
+            base_duration = max(base_duration // 2, 4)
+            
+        adjusted_duration = int(base_duration / taper_multiplier)
+        print(f"   Duration: {base_duration} weeks → {adjusted_duration} weeks (frailty-adjusted)")
+        
+        # Generate steps - TRY Gemini first for detailed schedule
+        steps = []
+        patient_education = []
+        pause_criteria = []
+        reversal_criteria = []
+        
+        if self.use_gemini and self.gemini_service:
+            try:
+                print(f"🤖 Generating detailed AI taper schedule...")
+                gemini_schedule = self.gemini_service.generate_detailed_taper_schedule(
+                    drug_name=request.drug_name,
+                    drug_class=row['drug_class'],
+                    current_dose=request.current_dose,
+                    duration_on_med=request.duration_on_medication,
+                    taper_strategy=row['taper_strategy_name'],
+                    step_logic=row['step_logic'],
+                    total_weeks=adjusted_duration,
+                    patient_age=request.patient_age,
+                    cfs_score=request.patient_cfs_score or 3,
+                    comorbidities=request.comorbidities,
+                    withdrawal_symptoms=row['withdrawal_symptoms']
+                )
+                
+                # Validate and convert steps
+                if gemini_schedule and 'taper_steps' in gemini_schedule:
+                    validated_steps = []
+                    for step_dict in gemini_schedule.get('taper_steps', []):
+                        try:
+                            # Ensure week is integer
+                            if isinstance(step_dict.get('week'), str):
+                                week_str = step_dict['week'].split('-')[0].strip()
+                                step_dict['week'] = int(week_str)
+                            
+                            validated_steps.append(TaperStep(**step_dict))
+                        except Exception as e:
+                            print(f"⚠️  Skipping invalid step: {e}")
+                            continue
+                    
+                    steps = validated_steps
+                    patient_education = gemini_schedule.get('patient_education', [])
+                    pause_criteria = gemini_schedule.get('pause_criteria', [])
+                    reversal_criteria = gemini_schedule.get('success_indicators', [])
+                    
+                    print(f"✅ AI generated {len(steps)} taper steps")
+                
+            except Exception as e:
+                print(f"⚠️  Gemini schedule generation failed: {e}")
+                print("🔄 Using basic taper generation")
+        
+        # Fallback to basic generation if needed
+        if not steps:
+            print(f"📋 Generating basic taper plan")
+            steps = self._generate_basic_steps(
+                row['step_logic'],
+                row['withdrawal_symptoms'],
+                adjusted_duration,
+                request.current_dose,
+                row['drug_class']
+            )
+            patient_education = self._create_patient_education(
+                request.drug_name, row['drug_class'], row['withdrawal_symptoms']
+            )
+            pause_criteria = [str(row['pause_criteria']), "Severe withdrawal symptoms", "Patient request"]
+            reversal_criteria = [
+                "Unmanageable symptoms lasting >1 week",
+                "Return of severe symptoms",
+                "Medical emergency"
+            ]
+        
+        # Monitoring schedule
+        monitoring_schedule = self._create_monitoring_schedule(
+            row['monitoring_frequency'],
+            adjusted_duration,
+            row['withdrawal_symptoms']
+        )
+        
+        return TaperPlanResponse(
+            drug_name=request.drug_name,
+            drug_class=row['drug_class'],
+            risk_profile=row['risk_profile'],
+            taper_strategy=row['taper_strategy_name'],
+            total_duration_weeks=adjusted_duration,
+            steps=steps,
+            pause_criteria=pause_criteria,
+            reversal_criteria=reversal_criteria,
+            monitoring_schedule=monitoring_schedule,
+            patient_education=patient_education
         )
 
