@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from 'axios';
 import {
   FaExclamationTriangle,
   FaExclamationCircle,
@@ -22,8 +23,54 @@ const ResultsDashboard = ({ results, patientData }) => {
   const [showMonitoringModal, setShowMonitoringModal] = useState(false);
   const [showInteractionModal, setShowInteractionModal] = useState(false);
   const [selectedInteraction, setSelectedInteraction] = useState(null);
+  const [isPdfGenerating, setIsPdfGenerating] = useState(false)
 
+  
+
+
+  React.useEffect(() => {
+    if (results) {
+      generateProfessionalPDF();
+    }
+  }, [results]);
   if (!results) return null;
+
+  // ------------------------
+  // PROFESSIONAL PDF (Backend) - Auto-generated
+  // ------------------------
+  const generateProfessionalPDF = async () => {
+    setIsPdfGenerating(true);
+    try {
+      console.log('📄 Generating professional clinical PDF...');
+      
+      const response = await axios.post(
+        'http://localhost:8000/generate-report-pdf',
+        results,
+        {
+          responseType: 'blob',
+          headers: { 'Content-Type': 'application/json' }
+        }
+      );
+
+      // Auto-download
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      const timestamp = new Date().toISOString().slice(0, 10);
+      link.setAttribute('download', `Clinical_Deprescribing_Report_${timestamp}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      console.log('✅ Professional PDF downloaded successfully');
+    } catch (error) {
+      console.error('❌ Error generating professional PDF:', error);
+      alert('Error generating PDF: ' + error.message);
+    } finally {
+      setIsPdfGenerating(false);
+    }
+  };
 
   const {
     medication_analyses,
@@ -81,13 +128,27 @@ const ResultsDashboard = ({ results, patientData }) => {
     <div>
       {/* PDF Button */}
       <div className="w-full flex justify-end mb-4">
+              <button
+        onClick={generateProfessionalPDF}
+        disabled={isPdfGenerating}
+        className={`px-4 py-2 rounded-md shadow transition flex items-center ${
+          isPdfGenerating
+            ? 'bg-gray-400 cursor-not-allowed'
+            : 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700'
+        }`}
+      >
+        <FaRobot className="mr-2" />
+        {isPdfGenerating ? 'Generating...' : 'Download Clinical Report (PDF)'}
+      </button>
+
+        {/* Quick Screenshot PDF */}
         <button
           onClick={handleExportPDF}
-          className="px-4 py-2 bg-indigo-600 text-white rounded-md shadow 
-                     hover:bg-indigo-700 transition flex items-center"
+          className="px-4 py-2 bg-gray-600 text-white rounded-md shadow 
+                   hover:bg-gray-700 transition flex items-center"
         >
-          <FaRobot className="mr-2" />
-          Export PDF
+          <FaCalendarAlt className="mr-2" />
+          Quick Screenshot PDF
         </button>
       </div>
 

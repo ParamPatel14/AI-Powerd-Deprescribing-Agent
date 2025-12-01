@@ -16,6 +16,8 @@ import {
   INDICATION_OPTIONS,
   HERBAL_EFFECTS
 } from '../utils/medicationOptions';
+import MedicationExtractor from './MedicationExtractor';
+
 
 const PatientForm = ({ onSubmit, isLoading }) => {
   const [formData, setFormData] = useState({
@@ -26,8 +28,24 @@ const PatientForm = ({ onSubmit, isLoading }) => {
     life_expectancy: '2-5_years',
     comorbidities: [],
     medications: [],
-    herbs: []
+    herbs: [],
+    // Lab values (match the input field names used below)
+    serum_creatinine_mg_dl: null,
+    bilirubin_mg_dl: null,
+    inr: null,
+    ast: null,
+    alt: null,
+    sodium: null
   });
+
+  // Handler for AI-extracted medications
+  const handleExtractedMeds = (extractedMeds) => {
+    setFormData(prev => ({
+      ...prev,
+      medications: [...prev.medications, ...extractedMeds]
+    }));
+    alert(`✅ Added ${extractedMeds.length} medication(s)! Review and edit them below if needed.`);
+  };
 
   const [currentMedication, setCurrentMedication] = useState({
     generic_name: '',
@@ -46,6 +64,7 @@ const PatientForm = ({ onSubmit, isLoading }) => {
     intended_effect: '',
     duration: 'long_term'
   });
+  
 
   // Custom styles for react-select
   const selectStyles = {
@@ -195,6 +214,7 @@ const PatientForm = ({ onSubmit, isLoading }) => {
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-6 mb-6">
+      <MedicationExtractor onMedicationsExtracted={handleExtractedMeds} />
       <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
         <FaUser className="mr-2" />
         Patient Information

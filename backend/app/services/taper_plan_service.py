@@ -115,12 +115,12 @@ class TaperPlanService:
             return None
 
     def _check_stopp_for_drug(self, drug_name: str):
-        """Check if drug is in STOPP Criteria"""
+        """Check if drug is in STOPP v2 Criteria"""
         try:
-            from app.utils.data_loader import load_stopp_data
-            stopp_df = load_stopp_data()
+            from app.utils.data_loader import load_stopp_start_v2
+            stopp_df, _ = load_stopp_start_v2()  # ✅ Load STOPP v2
             
-            # Search in drug/class column
+            # Search in drug_class column (STOPP v2)
             drug_lower = drug_name.lower()
             matches = stopp_df[stopp_df['drug_class'].str.lower().str.contains(drug_lower, na=False)]
             
@@ -131,12 +131,17 @@ class TaperPlanService:
                     'system': row.get('system', 'Unknown'),
                     'criterion': row.get('criterion', 'Potentially inappropriate'),
                     'action': row.get('action', 'Review'),
-                    'condition': row.get('condition', 'N/A')
+                    'condition': row.get('condition', 'N/A'),
+                    'rationale': row.get('rationale', 'N/A'),  # ✅ Add rationale
+                    'severity': row.get('severity', 'Unknown')  # ✅ Add severity
                 }
             return None
         except Exception as e:
             print(f"   Error checking STOPP: {e}")
+            import traceback
+            traceback.print_exc()  # ✅ Show full error
             return None
+
 
     def _generate_plan_with_gemini_context(self, request, beers_info, stopp_info):
         """Use Gemini with clinical context from Beers/STOPP"""

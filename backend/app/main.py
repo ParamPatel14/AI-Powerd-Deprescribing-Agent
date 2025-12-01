@@ -1,7 +1,10 @@
+from datetime import datetime
 import os
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
+
+from fastapi.responses import FileResponse, StreamingResponse
 from app.models.patient import PatientInput
 from app.models.api_models import *
 from app.services.acb_engine import ACBEngine
@@ -19,10 +22,15 @@ from app.utils.data_loader import *
 from app.services.taper_plan_service import TaperPlanService
 from app.utils.data_loader import load_stopp_start_v2
 from app.services.prescription_parser import PrescriptionParser
+from app.services.pdf_generator import PDFGenerator
+
+# Initialize PDF generator
+pdf_generator = PDFGenerator()
 
 from dotenv import load_dotenv
 load_dotenv()
 GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+prescription_parser = PrescriptionParser(gemini_api_key=GEMINI_API_KEY)
 
 app = FastAPI(
     title="Deprescribing Clinical Decision Support System",
@@ -257,6 +265,83 @@ async def check_interactions(request: InteractionCheckRequest):
         raise HTTPException(status_code=500, detail=f"Interaction check error: {str(e)}")
 
 # ========== ADDITIONAL UTILITY ENDPOINTS ==========
+@app.post("/extract-from-prescription", tags=["Medication Extraction"])
+async def extract_from_prescription(file: UploadFile = File(...)):
+    """
+    Extract medications from uploaded prescription (PDF or image).
+    Supports: PDF, JPG, PNG
+    """
+    try:
+        contents = await file.read()
+        
+        if file.filename.endswith('.pdf'):
+            medications = prescription_parser.extract_from_pdf(contents)
+        elif file.filename.lower().endswith(('.jpg', '.jpeg', '.png')):
+            medications = prescription_parser.extract_from_image(contents)
+        else:
+            raise HTTPException(status_code=400, detail="Unsupported file type")
+        
+        return {
+            "success": True,
+            "medications": medications,
+            "count": len(medications)
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.post("/extract-brown-bag", tags=["Medication Extraction"])
+async def extract_brown_bag(file: UploadFile = File(...)):
+    """Extract medications from brown bag review photo."""
+    try:
+        print(f"📸 Received file: {file.filename}, type: {file.content_type}")
+        
+        contents = await file.read()
+        print(f"📦 File size: {len(contents)} bytes")
+        
+        medications = prescription_parser.extract_from_brown_bag(contents)
+        print(f"✅ Extracted {len(medications)} medications")
+        
+        return {
+            "success": True,
+            "medications": medications,
+            "count": len(medications)
+        }
+    except Exception as e:
+        # ✅ Print full error to console
+        import traceback
+        print("❌ ERROR in extract_brown_bag:")
+        print(traceback.format_exc())
+        
+        raise HTTPException(
+            status_code=500, 
+            detail=f"Extraction error: {str(e)}"
+        )
+
+@app.post("/generate-report-pdf", tags=["Reports"])
+async def generate_report_pdf(results: AnalyzePatientResponse):
+    """
+    Generate professional clinical PDF report from analysis results.
+    Returns formatted PDF with tables, sections, and clinical formatting.
+    """
+    try:
+        # Generate PDF buffer
+        pdf_buffer = pdf_generator.generate_patient_report_pdf(results)
+        
+        # Return as streaming response
+        return StreamingResponse(
+            pdf_buffer,
+            media_type="application/pdf",
+            headers={
+                "Content-Disposition": f"attachment; filename=Clinical_Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf"
+            }
+        )
+    except Exception as e:
+        import traceback
+        print("❌ PDF Generation Error:")
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"PDF generation failed: {str(e)}")
+
 
 @app.get("/", tags=["System"])
 async def root():
