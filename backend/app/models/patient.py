@@ -44,3 +44,9 @@ class PatientInput(BaseModel):
     comorbidities: List[str] = []
     medications: List[Medication]
     herbs: List[HerbalProduct] = []
+    serum_creatinine_mg_dl: Optional[float] = None  # mg/dL
+    serum_bilirubin_mg_dl: Optional[float] = None   # mg/dL
+    inr: Optional[float] = None                      # INR for MELD
+    ast_u_l: Optional[float] = None                  # AST (U/L)
+    alt_u_l: Optional[float] = None                  # ALT (U/L)
+    serum_sodium_mmol_l: Optional[float] = None

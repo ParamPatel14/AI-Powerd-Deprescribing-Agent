@@ -17,6 +17,8 @@ from app.services.analysis_service import AnalysisService
 from app.services.taper_plan_service import TaperPlanService
 from app.utils.data_loader import *
 from app.services.taper_plan_service import TaperPlanService
+from app.utils.data_loader import load_stopp_start_v2
+from app.services.prescription_parser import PrescriptionParser
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -54,6 +56,7 @@ ttb_data = load_ttb_data()
 ayurvedic_interactions_data = load_ayurvedic_known_interactions()
 ayurvedic_profiles_data = load_ayurvedic_pharmacological_profiles()
 ayurvedic_summary_data = load_ayurvedic_herbs_summary()
+stopp_v2_df, start_v2_df = load_stopp_start_v2()
 
 print("✅ All datasets loaded!")
 print("⚙️  Initializing engines...")
@@ -62,7 +65,7 @@ print("⚙️  Initializing engines...")
 engines = {
     'acb': ACBEngine(acb_data),
     'beers': BeersEngine(beers_data),
-    'stopp': STOPPEngine(stopp_data),
+    'stopp': STOPPEngine(stopp_v2_df, start_v2_df),
     'tapering': TaperingEngine(tapering_data, cfs_data),
     'frailty': FrailtyRiskEngine(cfs_data),
     'gender': GenderRiskEngine(gender_risk_data),

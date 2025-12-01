@@ -8,9 +8,25 @@ const api = axios.create({
     'Content-Type': 'application/json',
   },
 });
+export const analyzePatient = async (patientData) => {
+  try {
+    const response = await axios.post('http://localhost:8000/analyze-patient', {
+      patient: patientData
+    });
+    return response.data;
+  } catch (error) {
+    // ✅ DEBUG: Log the validation errors
+    console.error('=== BACKEND VALIDATION ERROR ===');
+    console.error('Status:', error.response?.status);
+    console.error('Detail:', JSON.stringify(error.response?.data?.detail, null, 2));
+    console.error('================================');
+    throw error;
+  }
+};
+
 
 // API Methods
-export const analyzePatient = async (patientData) => {
+/*export const analyzePatient = async (patientData) => {
   try {
     const response = await api.post('/analyze-patient', { patient: patientData });
     return response.data;
@@ -19,6 +35,7 @@ export const analyzePatient = async (patientData) => {
     throw error;
   }
 };
+*/
 
 export const getTaperPlan = async (taperRequest) => {
   try {

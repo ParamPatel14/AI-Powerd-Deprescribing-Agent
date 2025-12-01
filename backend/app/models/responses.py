@@ -90,3 +90,13 @@ class RuleEngineOutput(BaseModel):
     herbal_interactions: List[HerbalInteraction]
     medication_risk_classifications: List[MedicationRiskAssessment]
     summary: Dict[str, int]
+
+class STOPPFlagDetailed(BaseModel):
+    """Detailed STOPP flag for frontend display"""
+    criterion_id: str
+    criterion: str
+    drug_class: str
+    condition: str
+    rationale: str
+    action: str
+    severity: str

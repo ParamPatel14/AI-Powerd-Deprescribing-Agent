@@ -330,6 +330,102 @@ const PatientForm = ({ onSubmit, isLoading }) => {
             ))}
           </div>
         </div>
+        <div className="bg-blue-50 p-4 rounded-lg mb-6 border border-blue-200">
+          <h3 className="font-semibold text-blue-900 mb-3">📊 Lab Values (Optional)</h3>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+            {/* Creatinine */}
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Serum Creatinine (mg/dL)
+              </label>
+              <input
+                type="number"
+                step="0.1"
+                value={formData.serum_creatinine_mg_dl || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, serum_creatinine_mg_dl: parseFloat(e.target.value) || null })
+                }
+                className="w-full px-3 py-2 border rounded-md"
+                placeholder="e.g., 1.2"
+              />
+            </div>
+
+            {/* Bilirubin */}
+            <div>
+              <label className="block text-sm font-medium mb-1">Bilirubin (mg/dL)</label>
+              <input
+                type="number"
+                step="0.1"
+                value={formData.bilirubin_mg_dl || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, bilirubin_mg_dl: parseFloat(e.target.value) || null })
+                }
+                className="w-full px-3 py-2 border rounded-md"
+                placeholder="e.g., 0.8"
+              />
+            </div>
+
+            {/* INR */}
+            <div>
+              <label className="block text-sm font-medium mb-1">INR</label>
+              <input
+                type="number"
+                step="0.1"
+                value={formData.inr || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, inr: parseFloat(e.target.value) || null })
+                }
+                className="w-full px-3 py-2 border rounded-md"
+                placeholder="e.g., 1.1"
+              />
+            </div>
+
+            {/* AST */}
+            <div>
+              <label className="block text-sm font-medium mb-1">AST (U/L)</label>
+              <input
+                type="number"
+                value={formData.ast || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, ast: parseFloat(e.target.value) || null })
+                }
+                className="w-full px-3 py-2 border rounded-md"
+                placeholder="e.g., 22"
+              />
+            </div>
+
+            {/* ALT */}
+            <div>
+              <label className="block text-sm font-medium mb-1">ALT (U/L)</label>
+              <input
+                type="number"
+                value={formData.alt || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, alt: parseFloat(e.target.value) || null })
+                }
+                className="w-full px-3 py-2 border rounded-md"
+                placeholder="e.g., 18"
+              />
+            </div>
+
+            {/* Sodium */}
+            <div>
+              <label className="block text-sm font-medium mb-1">Sodium (mmol/L)</label>
+              <input
+                type="number"
+                value={formData.sodium || ''}
+                onChange={(e) =>
+                  setFormData({ ...formData, sodium: parseFloat(e.target.value) || null })
+                }
+                className="w-full px-3 py-2 border rounded-md"
+                placeholder="e.g., 138"
+              />
+            </div>
+          </div>
+        </div>
+        {/* ******* END OF LAB VALUES SECTION ****** */}
 
         {/* Add Medication Section */}
         <div className="border-t pt-6 mb-6">

@@ -52,3 +52,20 @@ def load_ayurvedic_pharmacological_profiles():
 
 def load_ayurvedic_herbs_summary():
     return _read_csv_safe(DATA_DIR / "ayurvedic_herbs_summary.csv")
+
+import pandas as pd
+from pathlib import Path
+
+# Add to existing file
+def load_stopp_start_v2():
+    """Load STOPP/START v2 criteria from CSV files"""
+    base_path = Path(__file__).resolve().parents[3] / "datasets"
+    
+    stopp_df = _read_csv_safe(base_path / "stopp_criteria_v2.csv")
+    start_df = _read_csv_safe(base_path / "start_criteria_v2.csv")
+    
+    print(f"✅ Loaded {len(stopp_df)} STOPP criteria")
+    print(f"✅ Loaded {len(start_df)} START criteria")
+    
+    return stopp_df, start_df
+

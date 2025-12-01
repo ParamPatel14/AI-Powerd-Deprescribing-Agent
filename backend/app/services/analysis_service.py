@@ -1,4 +1,4 @@
-from typing import List, Dict, Tuple
+from typing import List, Dict
 from app.models.patient import PatientInput
 from app.models.api_models import (
     MedicationAnalysis, TaperingSchedule, MonitoringPlan, AnalyzePatientResponse
@@ -8,24 +8,37 @@ from app.services.priority_classifier import PriorityClassifier
 from app.services.tapering_engine import TaperingEngine
 import pandas as pd
 
+from app.services.clinical_calculators import ClinicalCalculators
+from app.services.organ_function_checker import OrganFunctionChecker
+
 class AnalysisService:
     def __init__(self, all_engines: Dict):
         """Initialize with all engine instances"""
         self.engines = all_engines
         self.priority_classifier = PriorityClassifier()
-    
+
     def analyze_patient_comprehensive(self, patient: PatientInput) -> AnalyzePatientResponse:
         """Comprehensive patient analysis orchestration"""
+
+        # ===== STEP 1: Calculate clinical scores =====
+        egfr = ClinicalCalculators.calculate_egfr_ckd_epi(patient)
+        meld = ClinicalCalculators.calculate_meld_score(patient)
         
-        # Run all modules
+        if egfr:
+            print(f"📊 Calculated eGFR: {egfr} mL/min/1.73m²")
+        if meld:
+            print(f"📊 Calculated MELD: {meld}")
+
+        # ===== STEP 2: Run all rule engines ===== 
         acb_result = self.engines['acb'].calculate_acb_score(patient.medications)
         beers_matches = self.engines['beers'].check_beers_criteria(patient)
-        stopp_flags = self.engines['stopp'].check_stopp_criteria(patient)
+        stopp_flags = self.engines['stopp'].check_stopp_criteria(patient, egfr)  # ✅ Pass eGFR
+        start_recs = self.engines['stopp'].check_start_criteria(patient, egfr)   # ✅ Pass eGFR
         taper_plans = self.engines['tapering'].generate_taper_plans(patient)
         gender_flags = self.engines['gender'].check_gender_risks(patient)
         ttb_assessments = self.engines['ttb'].assess_time_to_benefit(patient)
-        
-        # Herbal interactions
+
+        # ===== STEP 3: Herbal interactions =====
         known_interactions = self.engines['ayurvedic'].check_known_interactions(
             patient.herbs, patient.medications
         )
@@ -33,32 +46,41 @@ class AnalysisService:
             patient.herbs, patient.medications, patient
         )
         all_interactions = known_interactions + simulated_interactions
-        
-        # Build medication analyses
-        medication_analyses = self._build_medication_analyses(
-            patient, acb_result, beers_matches, stopp_flags, 
-            ttb_assessments, gender_flags, all_interactions
+
+        # ===== STEP 4: Get organ function warnings ===== 
+        organ_warnings = OrganFunctionChecker.get_organ_function_flags(
+            patient, 
+            egfr, 
+            patient.ast_u_l, 
+            patient.alt_u_l
         )
-        
-        # Build tapering schedules
+
+        # ===== STEP 5: Build medication analyses (with organ warnings) =====
+        medication_analyses = self._build_medication_analyses(
+            patient, acb_result, beers_matches, stopp_flags,
+            ttb_assessments, gender_flags, all_interactions,
+            organ_warnings  # ✅ Pass organ warnings
+        )
+
+        # ===== STEP 6: Build tapering schedules =====
         tapering_schedules = self._build_tapering_schedules(taper_plans, patient)
-        
-        # Build monitoring plans
+
+        # ===== STEP 7: Build monitoring plans =====
         monitoring_plans = self._build_monitoring_plans(
             medication_analyses, taper_plans, all_interactions
         )
-        
-        # Generate clinical recommendations
+
+        # ===== STEP 8: Generate clinical recommendations =====
         clinical_recommendations = self._generate_clinical_recommendations(
             medication_analyses, all_interactions, patient
         )
-        
-        # Generate safety alerts
+
+        # ===== STEP 9: Generate safety alerts =====
         safety_alerts = self._generate_safety_alerts(
             medication_analyses, all_interactions
         )
-        
-        # Patient summary
+
+        # ===== STEP 10: Patient summary =====
         patient_summary = {
             "age": patient.age,
             "gender": patient.gender.value,
@@ -67,28 +89,34 @@ class AnalysisService:
             "life_expectancy": patient.life_expectancy.value,
             "total_medications": len(patient.medications),
             "total_herbs": len(patient.herbs),
-            "comorbidities": patient.comorbidities
+            "comorbidities": patient.comorbidities,
+            # ✅ Add calculated scores
+            "calculated_egfr": egfr,
+            "calculated_meld": meld,
+            "renal_function": self._classify_renal_function(egfr),
+            "hepatic_function": self._classify_hepatic_function(patient.ast_u_l, patient.alt_u_l),
         }
-        
-        # Priority summary
+
+        # ===== STEP 11: Priority summary =====
         priority_summary = {
             "RED": sum(1 for m in medication_analyses if m.risk_category == RiskCategory.RED),
             "YELLOW": sum(1 for m in medication_analyses if m.risk_category == RiskCategory.YELLOW),
-            "GREEN": sum(1 for m in medication_analyses if m.risk_category == RiskCategory.GREEN)
+            "GREEN": sum(1 for m in medication_analyses if m.risk_category == RiskCategory.GREEN),
         }
-        
-        # Herb-drug interactions summary
+
+        # ===== STEP 12: Herb-drug interactions summary =====
         herb_drug_interactions = [
             {
                 "herb": i.herb_name,
                 "drug": i.drug_name,
                 "severity": i.severity,
                 "effect": i.clinical_effect,
-                "evidence": i.evidence_strength.value
+                "evidence": i.evidence_strength.value,
             }
             for i in all_interactions
         ]
-        
+
+        # ===== STEP 13: Return complete response =====
         return AnalyzePatientResponse(
             patient_summary=patient_summary,
             medication_analyses=medication_analyses,
@@ -97,28 +125,39 @@ class AnalysisService:
             monitoring_plans=monitoring_plans,
             herb_drug_interactions=herb_drug_interactions,
             clinical_recommendations=clinical_recommendations,
-            safety_alerts=safety_alerts
+            safety_alerts=safety_alerts,
+            global_start_recommendations=start_recs,  # ✅ Include START recommendations
         )
-    
-    def _build_medication_analyses(self, patient, acb_result, beers_matches, 
-                                   stopp_flags, ttb_assessments, gender_flags,
-                                   interactions) -> List[MedicationAnalysis]:
-        """Build detailed medication analysis"""
-        analyses = []
+
+    def _build_medication_analyses(
+        self,
+        patient,
+        acb_result,
+        beers_matches,
+        stopp_flags,
+        ttb_assessments,
+        gender_flags,
+        interactions,
+        organ_warnings   # ✅ NEW ARGUMENT
+    ) -> List[MedicationAnalysis]:
+        """Build detailed medication analysis with organ function warnings"""
         
-        # Lookup tables
+        analyses = []
+
+        # Build lookup tables
         acb_lookup = {item['name']: item['acb_score'] for item in acb_result.medications_with_acb}
         beers_dict = {m.drug_name: m for m in beers_matches}
         stopp_dict = {f.drug_medication.split()[0]: f for f in stopp_flags if f.drug_medication}
         ttb_dict = {a.drug_name: a for a in ttb_assessments}
         gender_dict = {g.drug_name: g for g in gender_flags}
-        
+
         # Analyze each medication
         for med in patient.medications:
-            flags = []
-            recommendations = []
-            monitoring = []
-            
+            flags: List[str] = []
+            recommendations: List[str] = []
+            monitoring: List[str] = []
+
+            # ------ ACB SCORE ------
             acb_score = acb_lookup.get(med.generic_name, 0)
             if acb_score >= 3:
                 flags.append(f"High anticholinergic burden (ACB={acb_score})")
@@ -126,66 +165,97 @@ class AnalysisService:
                 monitoring.append("Cognitive function")
             elif acb_score > 0:
                 flags.append(f"Moderate anticholinergic burden (ACB={acb_score})")
-            
+
+            # ------ BEERS ------
             if med.generic_name in beers_dict:
                 beers = beers_dict[med.generic_name]
                 flags.append(f"Beers Criteria: {beers.category}")
                 recommendations.append(beers.recommendation)
-            
+
+            # ------ STOPP ------
             if any(med.generic_name.lower() in k.lower() for k in stopp_dict.keys()):
                 flags.append("STOPP criteria matched")
                 recommendations.append("Review indication and necessity")
-            
+
+            # ------ TIME TO BENEFIT ------
             if med.generic_name in ttb_dict:
                 ttb = ttb_dict[med.generic_name]
                 if "DEPRESCRIBE" in ttb.recommendation:
                     flags.append("Time-to-benefit exceeds life expectancy")
                     recommendations.append(ttb.recommendation)
-            
+
+            # ------ GENDER RISKS ------
             if med.generic_name in gender_dict:
                 gender = gender_dict[med.generic_name]
                 flags.append(f"Gender-specific risk: {gender.risk_category}")
                 monitoring.append(gender.monitoring_guidance)
-            
-            # Check herb interactions
-            med_interactions = [i for i in interactions if i.drug_name.lower() == med.generic_name.lower()]
+
+            # ------ HERB INTERACTIONS ------
+            med_interactions = [
+                i for i in interactions if i.drug_name.lower() == med.generic_name.lower()
+            ]
             if med_interactions:
                 for interaction in med_interactions:
                     flags.append(f"Herb-drug interaction: {interaction.herb_name} ({interaction.severity})")
                     monitoring.append(f"Monitor for {interaction.clinical_effect}")
-            
-            # Determine risk category
+
+            # ------ ✅ ORGAN FUNCTION WARNINGS ------
+            med_organ_warn = next(
+                (w for w in organ_warnings if w["medication"].lower() == med.generic_name.lower()),
+                None
+            )
+
+            if med_organ_warn:
+                # Renal warnings
+                for rw in med_organ_warn.get("renal_warnings", []):
+                    flags.append(f"⚠️ RENAL: {rw['action']} - {rw['reason']}")
+                    recommendations.append(rw["action"])
+                    monitoring.append("Renal function (eGFR, CrCl)")
+
+                # Hepatic warnings
+                for hw in med_organ_warn.get("hepatic_warnings", []):
+                    flags.append(f"⚠️ HEPATIC: {hw['reason']}")
+                    recommendations.append("Monitor LFTs")
+                    monitoring.append("Liver function tests")
+
+            # ------ RISK SCORING ------
             risk_category = self._determine_risk_category(acb_score, flags)
             risk_score = self._calculate_risk_score(acb_score, len(flags), risk_category)
-            
-            # Taper requirement
             taper_required = risk_category in [RiskCategory.RED, RiskCategory.YELLOW]
-            
+
+            # Default recommendations if none added
             if not recommendations:
-                if risk_category == RiskCategory.GREEN:
-                    recommendations.append("Continue medication with routine monitoring")
-                else:
-                    recommendations.append("Clinical review recommended")
-            
+                recommendations.append(
+                    "Continue medication with routine monitoring"
+                    if risk_category == RiskCategory.GREEN
+                    else "Clinical review recommended"
+                )
+
+            # Default monitoring if none added
             if not monitoring:
                 monitoring.append("Routine clinical assessment")
-            
-            analyses.append(MedicationAnalysis(
-                name=med.generic_name,
-                type="allopathic",
-                risk_category=risk_category,
-                risk_score=risk_score,
-                flags=flags if flags else ["No significant concerns"],
-                recommendations=recommendations,
-                taper_required=taper_required,
-                taper_duration_weeks=None,  # Will be filled by tapering schedules
-                monitoring_required=monitoring
-            ))
-        
-        # Analyze herbs
+
+            # Build MedicationAnalysis object
+            analyses.append(
+                MedicationAnalysis(
+                    name=med.generic_name,
+                    type="allopathic",
+                    risk_category=risk_category,
+                    risk_score=risk_score,
+                    flags=flags if flags else ["No significant concerns"],
+                    recommendations=recommendations,
+                    taper_required=taper_required,
+                    taper_duration_weeks=None,
+                    monitoring_required=monitoring,
+                )
+            )
+
+        # ------ ANALYZE HERBS ------
         for herb in patient.herbs:
-            herb_interactions = [i for i in interactions if i.herb_name.lower() == herb.generic_name.lower()]
-            
+            herb_interactions = [
+                i for i in interactions if i.herb_name.lower() == herb.generic_name.lower()
+            ]
+
             if herb_interactions:
                 major = [i for i in herb_interactions if i.severity == "Major"]
                 if major:
@@ -197,19 +267,24 @@ class AnalysisService:
             else:
                 risk_category = RiskCategory.GREEN
                 flags = ["No interactions identified"]
-            
-            analyses.append(MedicationAnalysis(
-                name=herb.generic_name,
-                type="herbal",
-                risk_category=risk_category,
-                risk_score=self._calculate_risk_score(0, len(flags), risk_category),
-                flags=flags,
-                recommendations=["Monitor for interactions"] if herb_interactions else ["Continue as indicated"],
-                taper_required=False,
-                monitoring_required=["Watch for adverse effects"]
-            ))
-        
+
+            analyses.append(
+                MedicationAnalysis(
+                    name=herb.generic_name,
+                    type="herbal",
+                    risk_category=risk_category,
+                    risk_score=self._calculate_risk_score(0, len(flags), risk_category),
+                    flags=flags,
+                    recommendations=["Monitor for interactions"]
+                    if herb_interactions
+                    else ["Continue as indicated"],
+                    taper_required=False,
+                    monitoring_required=["Watch for adverse effects"],
+                )
+            )
+
         return analyses
+
     
     def _build_tapering_schedules(self, taper_plans, patient) -> List[TaperingSchedule]:
         """Build week-by-week tapering schedules"""
@@ -354,3 +429,30 @@ class AnalysisService:
         
         score = base_score + acb_score + flag_count
         return min(10, max(1, score))
+    
+    def _classify_renal_function(self, egfr: float | None) -> str:
+        if egfr is None:
+            return "Not calculated"
+        if egfr >= 90:
+            return "Normal (G1)"
+        elif egfr >= 60:
+            return "Mild reduction (G2)"
+        elif egfr >= 45:
+            return "Mild-moderate reduction (G3a)"
+        elif egfr >= 30:
+            return "Moderate-severe reduction (G3b)"
+        elif egfr >= 15:
+            return "Severe reduction (G4)"
+        else:
+            return "Kidney failure (G5)"
+
+    def _classify_hepatic_function(self, ast: float | None, alt: float | None) -> str:
+        if ast is None or alt is None:
+            return "Not calculated"
+        if ast <= 40 and alt <= 40:
+            return "Normal"
+        elif ast <= 80 and alt <= 80:
+            return "Mildly elevated (monitor)"
+        else:
+            return "Significantly elevated (caution)"
+

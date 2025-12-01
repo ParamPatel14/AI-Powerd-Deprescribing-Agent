@@ -1,0 +1,98 @@
+section,system,criterion_id,criterion,drug_class,condition,rationale,action,severity
+A,Cardiovascular,A1,Digoxin for heart failure with normal systolic ventricular function,Digoxin,Heart failure with preserved EF,No clear evidence of benefit,STOP,Moderate
+A,Cardiovascular,A2,Digoxin for left systolic ventricular dysfunction where key interventions not tried,Digoxin,Heart failure - systolic dysfunction,Beta-blockers and ACEIs should be tried first,STOP,Moderate
+A,Cardiovascular,A3,Digoxin at dose >125mcg/day with eGFR <30,Digoxin,Renal impairment eGFR <30,Risk of digoxin toxicity,STOP or reduce dose,High
+A,Cardiovascular,A4,"Thiazide diuretic with hypokalaemia, hyponatraemia, hypercalcaemia or gout",Thiazide diuretics,"K+ <3.0 mmol/L, Na+ <130 mmol/L, Ca2+ >2.65 mmol/L, or gout",Can precipitate or worsen these conditions,STOP,High
+A,Cardiovascular,A5,Loop diuretic for hypertension,Loop diuretics,Hypertension,"Safer, more effective alternatives available",STOP,Moderate
+A,Cardiovascular,A6,Loop diuretic for dependent ankle oedema without heart/liver/renal failure,Loop diuretics,Peripheral oedema without organ failure,Leg elevation/compression more appropriate,STOP,Moderate
+A,Cardiovascular,A7,Aldosterone antagonists with K-sparing drugs without monitoring,"Spironolactone, Eplerenone with ACEIs/ARBs/Amiloride",Combined K-sparing therapy,Risk of dangerous hyperkalaemia (>6.0 mmol/L),STOP or monitor K+ every 6 months,High
+A,Cardiovascular,A8,Verapamil or diltiazem with heart failure,Non-dihydropyridine CCBs,Heart failure,May worsen heart failure,STOP,High
+A,Cardiovascular,A9,"Nicorandil with ulceration (GI, skin, mucosa, eyes)",Nicorandil,Any ulceration,Nicorandil causes ulcers that don't respond to treatment,STOP immediately,High
+A,Cardiovascular,A10,ACEIs or ARBs with hyperkalaemia,"ACE inhibitors, ARBs",Hyperkalaemia,Risk of dangerous hyperkalaemia,STOP,High
+A,Cardiovascular,A11,ACEIs and ARBs in combination,ACEI + ARB,Dual RAS blockade,"Limited evidence of benefit, increased risk",STOP one agent,Moderate
+A,Cardiovascular,A12,Centrally-acting antihypertensives as first-line,"Methyldopa, Clonidine, Moxonidine",Hypertension,Less well tolerated by elderly than other classes,STOP - use alternatives,Moderate
+A,Cardiovascular,A13,Amiodarone as first-line antiarrhythmic in SVT,Amiodarone,Supraventricular tachyarrhythmias,"Higher risk of side-effects than beta-blockers, digoxin, CCBs",STOP - try alternatives first,Moderate
+A,Cardiovascular,A14,"Non-selective beta-blocker with bradycardia, heart block, heart failure, or asthma",Non-selective beta-blockers,"Bradycardia, heart block, uncontrolled HF, or asthma",Risk of worsening condition or bronchospasm,STOP,High
+B,Anticoagulants/Antiplatelets,B1,Aspirin >160mg/day long-term,Aspirin,Any,"Increased bleeding risk, no evidence of increased efficacy",STOP - reduce to ≤160mg,Moderate
+B,Anticoagulants/Antiplatelets,B2,Aspirin with history of PUD without PPI,Aspirin,Past peptic ulcer disease,Risk of recurrent peptic ulcer,STOP or add PPI,High
+B,Anticoagulants/Antiplatelets,B3,Aspirin + warfarin/NOAC in chronic AF,Aspirin with anticoagulant,Chronic atrial fibrillation,No added benefit from aspirin,STOP aspirin,High
+B,Anticoagulants/Antiplatelets,B4,Aspirin as monotherapy for stroke prevention in AF,Aspirin,Atrial fibrillation,Anticoagulant more effective,STOP - switch to anticoagulant,High
+B,Anticoagulants/Antiplatelets,B5,Antiplatelet/anticoagulant with significant bleeding risk,"Aspirin, Clopidogrel, Warfarin, NOACs","Uncontrolled severe HTN, bleeding diathesis, recent bleeding",High risk of bleeding,STOP,High
+B,Anticoagulants/Antiplatelets,B6,Aspirin + clopidogrel for secondary stroke prevention,Aspirin + Clopidogrel,Secondary stroke prevention (no recent stent),No evidence of added benefit over clopidogrel alone,STOP aspirin,Moderate
+B,Anticoagulants/Antiplatelets,B7,Antiplatelet + warfarin/NOAC in stable vascular disease,Antiplatelet with anticoagulant,"Stable CAD, CVD, PAD",No added benefit from dual therapy,STOP antiplatelet,Moderate
+B,Anticoagulants/Antiplatelets,B8,Warfarin/NOAC for DVT >6 months without ongoing risk,Anticoagulants,First DVT without thrombophilia,No proven added benefit beyond 6 months,STOP,Moderate
+B,Anticoagulants/Antiplatelets,B9,Warfarin/NOAC for PE >12 months without ongoing risk,Anticoagulants,First PE without thrombophilia,No proven added benefit beyond 12 months,STOP,Moderate
+B,Anticoagulants/Antiplatelets,B10,NSAID + warfarin/NOAC,NSAIDs with anticoagulants,Any,Risk of major GI bleeding,STOP NSAID,High
+B,Anticoagulants/Antiplatelets,B11,Dabigatran if eGFR <30,Dabigatran,eGFR <30 ml/min,Risk of bleeding,STOP - use alternative,High
+B,Anticoagulants/Antiplatelets,B12,Rivaroxaban/Apixaban if eGFR <15,Factor Xa inhibitors,eGFR <15 ml/min,Risk of bleeding,STOP - use alternative,High
+C,Central Nervous System,C1,TCAs with dementia,Tricyclic antidepressants,Dementia,Risk of worsening cognitive impairment,STOP,High
+C,Central Nervous System,C2,TCAs with glaucoma,Tricyclic antidepressants,Glaucoma,Likely to exacerbate glaucoma,STOP,High
+C,Central Nervous System,C3,TCAs with cardiac conduction abnormalities,Tricyclic antidepressants,Cardiac conduction abnormalities,Pro-arrhythmic effects,STOP,High
+C,Central Nervous System,C4,TCAs with constipation,Tricyclic antidepressants,Constipation,Likely to worsen constipation,STOP,Moderate
+C,Central Nervous System,C5,TCAs with prostatism or urinary retention,Tricyclic antidepressants,Prostatism or urinary retention,Risk of urinary retention,STOP,High
+C,Central Nervous System,C6,Benzodiazepines with respiratory failure,"Benzodiazepines, Z-drugs","Acute/chronic respiratory failure (pO2 <8.0, pCO2 >6.5)",Risk of exacerbation of respiratory failure,STOP,High
+C,Central Nervous System,C7,Benzodiazepines if fallen in past 3 months,"Benzodiazepines, Z-drugs",Recent falls,Increased fall risk,STOP,High
+C,Central Nervous System,C8,Benzodiazepines >4 weeks,"Benzodiazepines, Z-drugs",Long-term use,"Risk of sedation, confusion, falls, withdrawal syndrome",STOP - taper gradually,High
+C,Central Nervous System,C9,Antipsychotics long-term as hypnotics (>1 month),Antipsychotics,Used for sleep,"Risk of confusion, hypotension, extrapyramidal effects, falls",STOP,High
+C,Central Nervous System,C10,Antipsychotics long-term with Parkinsonism/Lewy Body (>1 month),Antipsychotics,Parkinsonism or Lewy Body dementia,Likely to worsen extrapyramidal symptoms,STOP,High
+C,Central Nervous System,C11,Antipsychotics if fallen in past 3 months,Antipsychotics,Recent falls,"May cause gait dyspraxia, Parkinsonism",STOP,High
+C,Central Nervous System,C12,Anticholinergic antipsychotics with prostatism,"Chlorpromazine, Clozapine, Flupenthixol, etc",Prostatism or urinary retention,High risk of urinary retention,STOP,High
+C,Central Nervous System,C13,Antipsychotics in BPSD unless severe,Antipsychotics,Behavioral/psychological symptoms of dementia,Increased risk of stroke,STOP unless symptoms severe and non-pharm failed,High
+C,Central Nervous System,C14,Levodopa/dopamine agonists for benign essential tremor,"Levodopa, Dopamine agonists",Benign essential tremor,No evidence of efficacy,STOP,Moderate
+C,Central Nervous System,C15,Phenothiazines with epilepsy,Phenothiazines,Epilepsy,May lower seizure threshold,STOP,High
+C,Central Nervous System,C16,Phenothiazines as first-line treatment,Phenothiazines,Any (except specific indications),"Sedative, significant anticholinergic toxicity in elderly",STOP - use safer alternatives,Moderate
+C,Central Nervous System,C17,Anticholinergics for antipsychotic EPS,Anticholinergics,Extrapyramidal side-effects,Risk of anticholinergic toxicity,STOP,Moderate
+C,Central Nervous System,C18,Anticholinergics with delirium/dementia,Anticholinergics,Delirium or dementia,Risk of exacerbation of cognitive impairment,STOP,High
+C,Central Nervous System,C19,SSRIs with history of significant hyponatraemia,SSRIs,Na+ <130 mmol/L in previous 2 months,Risk of recurrent hyponatraemia,STOP or monitor closely,High
+C,Central Nervous System,C20,Citalopram/Escitalopram with QT prolongation,"Citalopram, Escitalopram",QT prolongation or drugs that prolong QT,Risk of arrhythmias,STOP - use alternative SSRI,High
+C,Central Nervous System,C21,First-generation antihistamines >1 week,"Chlorphenamine, Cyclizine, Promethazine",Prolonged use,Risk of sedation and anticholinergic effects,STOP,Moderate
+C,Central Nervous System,C22,Strong opioids as first-line for mild-moderate pain,Strong opioids,Mild-moderate pain,WHO analgesic ladder not observed,STOP - use paracetamol/weak opioids first,Moderate
+C,Central Nervous System,C23,Regular opioids >2 weeks with chronic constipation without laxatives,Opioids,Chronic constipation,Risk of severe constipation,STOP or add laxatives,High
+C,Central Nervous System,C24,Long-term opioids with dementia,Opioids,Dementia (unless palliative care),Exacerbation of cognitive impairment,STOP,Moderate
+C,Central Nervous System,C25,Long-term opioids with recurrent falls,Opioids,Recurrent falls,"Risk of drowsiness, postural hypotension, vertigo",STOP,High
+C,Central Nervous System,C26,Slow-release opioids without short-acting for breakthrough,Slow-release opioids,Severe pain,Risk of persistence of severe pain,STOP or add short-acting,Moderate
+C,Central Nervous System,C27,"Acetylcholinesterase inhibitors with bradycardia, heart block, syncope","Donepezil, Rivastigmine, Galantamine","Bradycardia <60bpm, heart block, syncope, or drugs that reduce HR","Risk of cardiac conduction failure, syncope, injury",STOP,High
+D,Gastrointestinal,D1,Metoclopramide with Parkinsonism,Metoclopramide,Parkinsonism,Risk of exacerbating symptoms,STOP,High
+D,Gastrointestinal,D2,Metoclopramide >5 days,Metoclopramide,Any,Maximum treatment time 5 days,STOP,Moderate
+D,Gastrointestinal,D3,Domperidone >1 week,Domperidone,Any,Maximum treatment time 1 week,STOP,Moderate
+D,Gastrointestinal,D4,Domperidone with serious heart conditions or QT drugs,Domperidone,"Heart conditions, QT-prolonging drugs, CYP3A4 inhibitors",Risk of arrhythmias,STOP,High
+D,Gastrointestinal,D5,PPI at full dose >8 weeks for uncomplicated PUD,Proton pump inhibitors,Peptic ulcer disease - healed,Offer low-dose maintenance or PRN,STOP full dose - reduce or PRN,Moderate
+D,Gastrointestinal,D6,Drugs causing constipation with chronic constipation,"Anticholinergics, oral iron, opioids, verapamil, aluminium antacids",Chronic constipation,Risk of exacerbation when non-constipating alternatives available,STOP - use alternatives,Moderate
+D,Gastrointestinal,D7,Antimotility drugs with C. diff or severe infective gastroenteritis,"Loperamide, etc","C. difficile, bloody diarrhoea, high fever",Risk of worsening infection/toxic megacolon,STOP immediately,High
+E,Respiratory,E1,Antimuscarinic bronchodilators with glaucoma or bladder obstruction,"Ipratropium, Tiotropium",Narrow-angle glaucoma or bladder outflow obstruction,May exacerbate glaucoma or cause urinary retention,STOP,High
+E,Respiratory,E2,Theophylline as monotherapy for asthma/COPD,Theophylline,Asthma or COPD,"Safer, more effective alternatives; narrow therapeutic index",STOP,Moderate
+E,Respiratory,E3,Systemic corticosteroids instead of inhaled for COPD,Oral corticosteroids,Moderate-severe COPD maintenance,Unnecessary exposure to systemic side-effects,STOP - switch to inhaled,High
+F,Endocrine,F1,Long-acting sulfonylureas with type 2 diabetes,"Glibenclamide, Chlorpropamide, Glimepiride",Type 2 diabetes,Risk of prolonged hypoglycaemia,STOP - use shorter-acting,High
+F,Endocrine,F2,Metformin if eGFR <30,Metformin,eGFR <30 ml/min,Risk of lactic acidosis,STOP,High
+F,Endocrine,F3,Pioglitazone with heart failure,Pioglitazone,Heart failure,Risk of exacerbation of heart failure,STOP,High
+F,Endocrine,F4,Oestrogens with breast cancer or VTE history,Oestrogens,History of breast cancer or venous thromboembolism,Increased risk of recurrence,STOP,High
+F,Endocrine,F5,Oestrogen without progestogen with intact uterus,Oestrogen alone,Intact uterus,Risk of endometrial cancer,STOP or add progestogen,High
+F,Endocrine,F6,HRT with multiple contraindications,Hormone replacement therapy,"Liver disease, oestrogen cancer, bleeding, thrombophilia, CVD",Multiple serious risks,STOP,High
+F,Endocrine,F7,Androgens without hypogonadism,"Testosterone, etc",No primary/secondary hypogonadism,"Risk of toxicity, no proven benefit",STOP,Moderate
+F,Endocrine,F8,Bisphosphonates >5 years,Bisphosphonates,Treatment >5 years,Consider drug holiday after discussing risks/benefits,STOP for drug holiday,Moderate
+F,Endocrine,F9,Bisphosphonates with thigh/hip/groin pain,Bisphosphonates,"Unexplained thigh, hip, or groin pain",May indicate atypical fracture,STOP after discussion,High
+F,Endocrine,F10,Oral bisphosphonates with upper GI disease,Oral bisphosphonates,"Dysphagia, oesophagitis, gastritis, PUD, GI bleeding",Risk of relapse/exacerbation of oesophagitis or ulcers,STOP,High
+F,Endocrine,F11,Bisphosphonates/Denosumab at low fracture risk,"Bisphosphonates, Denosumab",Low fracture risk (FRAX),No benefit if low risk,STOP,Moderate
+F,Endocrine,F12,Denosumab without regular dental checks,Denosumab,Unable to have regular dental checkups,Risk of osteonecrosis of jaw,STOP,High
+G,Genitourinary,G1,Alpha-blockers with orthostatic hypotension or syncope,"Tamsulosin, Doxazosin, etc",Symptomatic orthostatic hypotension or micturition syncope,Risk of precipitating recurrent syncope,STOP,High
+G,Genitourinary,G2,Anticholinergics with dementia/cognitive impairment,"Oxybutynin, Tolterodine, etc",Dementia or chronic cognitive impairment,"Risk of increased confusion, agitation",STOP,High
+G,Genitourinary,G3,Anticholinergics with narrow-angle glaucoma,Anticholinergics for bladder,Narrow-angle glaucoma,Risk of acute exacerbation of glaucoma,STOP,High
+G,Genitourinary,G4,Anticholinergics with chronic prostatism,Anticholinergics,Chronic prostatism,Risk of urinary retention,STOP,High
+G,Genitourinary,G5,PDE-5 inhibitors with severe heart failure or nitrates,"Sildenafil, Tadalafil",Severe HF (SBP <90) or concurrent nitrate therapy,Risk of cardiovascular collapse,STOP,High
+G,Genitourinary,G6,Diuretics with urinary incontinence,Diuretics,Concurrent urinary incontinence,May exacerbate incontinence,STOP or adjust timing,Moderate
+H,Musculoskeletal,H1,NSAID with PUD without PPI,NSAIDs,History of peptic ulcer or GI bleeding,Risk of peptic ulcer relapse,STOP or add PPI,High
+H,Musculoskeletal,H2,NSAID with corticosteroid/antiplatelet/SSRI without PPI,NSAIDs,"With corticosteroid, antiplatelet, or SSRI/venlafaxine",Increased risk of peptic ulcer,STOP or add PPI,High
+H,Musculoskeletal,H3,NSAID with severe/uncontrolled hypertension,NSAIDs,Severe or uncontrolled hypertension,Risk of exacerbation of hypertension,STOP,High
+H,Musculoskeletal,H4,NSAID with moderate-severe heart failure,"NSAIDs (especially Diclofenac, COX-2)",Moderate-severe heart failure,Risk of exacerbation of heart failure,STOP,High
+H,Musculoskeletal,H5,NSAID long-term >3 months without trial of simple analgesics,NSAIDs,Musculoskeletal pain,Simple analgesia/topical NSAID may be as effective,STOP - try paracetamol first,Moderate
+H,Musculoskeletal,H6,NSAID if eGFR <50,NSAIDs,eGFR <50 ml/min,Risk of deterioration in renal function,STOP,High
+H,Musculoskeletal,H7,NSAID with warfarin/NOAC,NSAIDs with anticoagulants,Concurrent anticoagulation,Risk of GI bleeding,STOP NSAID,High
+H,Musculoskeletal,H8,Long-term NSAID/Colchicine for gout,"NSAIDs, Colchicine",Chronic gout treatment >3 months,Allopurinol is first choice for prophylaxis,STOP - use allopurinol,Moderate
+H,Musculoskeletal,H9,Diclofenac/COX-2/Ibuprofen >1200mg with CVD,"Diclofenac, COX-2 inhibitors, Ibuprofen >1200mg",Cardiovascular disease,Increased risk of thrombotic events,STOP,High
+H,Musculoskeletal,H10,Long-term corticosteroids as monotherapy for RA,Corticosteroids,Rheumatoid arthritis >3 months,Risk of systemic steroid side-effects,STOP - add DMARD,High
+H,Musculoskeletal,H11,Corticosteroids for osteoarthritis,Corticosteroids (other than intra-articular),Osteoarthritis,Risk of systemic steroid side-effects,STOP,Moderate
+H,Musculoskeletal,H12,Colchicine if eGFR <10,Colchicine,eGFR <10 ml/min,Risk of colchicine toxicity,STOP,High
+H,Musculoskeletal,H13,Quinine without trial break every 3 months,Quinine,Leg cramps,May not be needed long-term,STOP for trial break,Moderate
+I,Nutrition,I1,Oral iron >200mg elemental/day,Iron supplements,Any,"No increased absorption >200mg, more side-effects",STOP - reduce dose,Moderate
+J,Eye,J1,Non-selective beta-blocker (oral/topical) with bradycardia/HB/HF/asthma,Non-selective beta-blockers,"Bradycardia, heart block, uncontrolled HF, or asthma",Risk of bronchospasm or cardiac complications,STOP,High
+K,Anticholinergic Burden,K1,Two or more drugs with ACB score ≥4,Multiple anticholinergics,Total ACB score ≥4,Risk of increased anticholinergic toxicity,STOP one or more,High

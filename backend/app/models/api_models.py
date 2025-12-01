@@ -20,6 +20,8 @@ class MedicationAnalysis(BaseModel):
     taper_required: bool
     taper_duration_weeks: Optional[int] = None
     monitoring_required: List[str]
+    stopp_flags: List[str] = []              # NEW
+    start_recommendations: List[str] = []
 
 class TaperingSchedule(BaseModel):
     """Week-by-week tapering schedule"""
@@ -47,6 +49,7 @@ class AnalyzePatientResponse(BaseModel):
     herb_drug_interactions: List[Dict[str, str]]
     clinical_recommendations: List[str]
     safety_alerts: List[str]
+    global_start_recommendations: List[str] = []
 
 # ========== Endpoint 2: /get-taper-plan ==========
 class TaperPlanRequest(BaseModel):
