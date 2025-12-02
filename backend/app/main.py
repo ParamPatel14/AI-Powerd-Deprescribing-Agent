@@ -85,13 +85,15 @@ engines = {
     )
 }
 
+
 # Initialize services
-analysis_service = AnalysisService(engines)
 taper_service = TaperPlanService(
     tapering_data, 
     cfs_data,
     gemini_api_key=GEMINI_API_KEY  # Pass API key
 )
+engines['taper_service'] = taper_service
+analysis_service = AnalysisService(engines)
 priority_classifier = PriorityClassifier()
 
 print("✅ All engines initialized!")

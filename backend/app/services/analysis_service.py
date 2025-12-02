@@ -10,6 +10,7 @@ import pandas as pd
 
 from app.services.clinical_calculators import ClinicalCalculators
 from app.services.organ_function_checker import OrganFunctionChecker
+from app.services.taper_plan_service import TaperPlanService
 
 class AnalysisService:
     def __init__(self, all_engines: Dict):
@@ -138,7 +139,8 @@ class AnalysisService:
         ttb_assessments,
         gender_flags,
         interactions,
-        organ_warnings   # ✅ NEW ARGUMENT
+        organ_warnings
+        
     ) -> List[MedicationAnalysis]:
         """Build detailed medication analysis with organ function warnings"""
         
@@ -147,7 +149,17 @@ class AnalysisService:
         # Build lookup tables
         acb_lookup = {item['name']: item['acb_score'] for item in acb_result.medications_with_acb}
         beers_dict = {m.drug_name: m for m in beers_matches}
-        stopp_dict = {f.drug_medication.split()[0]: f for f in stopp_flags if f.drug_medication}
+        
+        # ✅ FIX: Parse STOPP drug_class to match ALL drugs listed (comma-separated)
+        stopp_dict = {}
+        for flag in stopp_flags:
+            if flag.drug_medication:
+                # Split by comma to get all drugs in the class
+                drugs_in_class = [d.strip().lower() for d in flag.drug_medication.split(',')]
+                for drug in drugs_in_class:
+                    # Store each drug separately, pointing to the same flag
+                    stopp_dict[drug] = flag
+        
         ttb_dict = {a.drug_name: a for a in ttb_assessments}
         gender_dict = {g.drug_name: g for g in gender_flags}
 
@@ -172,9 +184,19 @@ class AnalysisService:
                 flags.append(f"Beers Criteria: {beers.category}")
                 recommendations.append(beers.recommendation)
 
-            # ------ STOPP ------
-            if any(med.generic_name.lower() in k.lower() for k in stopp_dict.keys()):
-                flags.append("STOPP criteria matched")
+            # ------ STOPP (improved matching) ------
+            med_lower = med.generic_name.lower()
+            matched_stopp = None
+            
+            # Check if medication matches any STOPP drug
+            for drug_key, stopp_flag in stopp_dict.items():
+                if med_lower in drug_key or drug_key in med_lower:
+                    matched_stopp = stopp_flag
+                    break
+            
+            if matched_stopp:
+                flags.append(f"STOPP Criteria: {matched_stopp.full_text}")
+                recommendations.append(f"Rationale: {matched_stopp.rationale}")
                 recommendations.append("Review indication and necessity")
 
             # ------ TIME TO BENEFIT ------
@@ -223,6 +245,60 @@ class AnalysisService:
             risk_score = self._calculate_risk_score(acb_score, len(flags), risk_category)
             taper_required = risk_category in [RiskCategory.RED, RiskCategory.YELLOW]
 
+
+            taper_plan_dict = None
+            if taper_required and 'taper_service' in self.engines:
+                try:
+                    print(f"🔧 Generating taper plan for {med.generic_name} ({risk_category.value})")
+                    
+                    # Import here to avoid circular imports
+                    from app.models.api_models import TaperPlanRequest
+                    
+                    # Create taper request
+                    taper_request = TaperPlanRequest(
+                        drug_name=med.generic_name,
+                        current_dose=f"{med.dose} {med.frequency}" if med.dose and med.frequency else "Standard dose",
+                        duration_on_medication="long_term",  # Default assumption
+                        patient_age=patient.age,
+                        patient_cfs_score=patient.cfs_score,
+                        comorbidities=patient.comorbidities if patient.comorbidities else []
+                    )
+                    
+                    # Get taper plan from service
+                    taper_response = self.engines['taper_service'].get_taper_plan(taper_request)
+                    
+                    # Convert to dict for JSON serialization
+                    taper_plan_dict = {
+                        "drug_name": taper_response.drug_name,
+                        "drug_class": taper_response.drug_class,
+                        "risk_profile": taper_response.risk_profile,
+                        "taper_strategy": taper_response.taper_strategy,
+                        "total_duration_weeks": taper_response.total_duration_weeks,
+                        "steps": [
+                            {
+                                "week": step.week,
+                                "dose": step.dose,
+                                "percentage_of_original": step.percentage_of_original,
+                                "instructions": step.instructions,
+                                "monitoring": step.monitoring,
+                                "withdrawal_symptoms_to_watch": step.withdrawal_symptoms_to_watch
+                            }
+                            for step in taper_response.steps
+                        ],
+                        "pause_criteria": taper_response.pause_criteria,
+                        "reversal_criteria": taper_response.reversal_criteria,
+                        "monitoring_schedule": taper_response.monitoring_schedule,
+                        "patient_education": taper_response.patient_education
+                    }
+                    
+                    print(f"✅ Taper plan generated: {taper_response.total_duration_weeks} weeks, {len(taper_response.steps)} steps")
+                    
+                except Exception as e:
+                    print(f"⚠️ Failed to generate taper plan for {med.generic_name}: {e}")
+                    import traceback
+                    traceback.print_exc()
+                    taper_plan_dict = None
+
             # Default recommendations if none added
             if not recommendations:
                 recommendations.append(
@@ -234,6 +310,8 @@ class AnalysisService:
             # Default monitoring if none added
             if not monitoring:
                 monitoring.append("Routine clinical assessment")
+
+            
 
             # Build MedicationAnalysis object
             analyses.append(
@@ -247,6 +325,7 @@ class AnalysisService:
                     taper_required=taper_required,
                     taper_duration_weeks=None,
                     monitoring_required=monitoring,
+                    taper_plan=taper_plan_dict,
                 )
             )
 
@@ -284,6 +363,7 @@ class AnalysisService:
             )
 
         return analyses
+
 
     
     def _build_tapering_schedules(self, taper_plans, patient) -> List[TaperingSchedule]:

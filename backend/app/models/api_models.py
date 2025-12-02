@@ -22,6 +22,7 @@ class MedicationAnalysis(BaseModel):
     monitoring_required: List[str]
     stopp_flags: List[str] = []              # NEW
     start_recommendations: List[str] = []
+    taper_plan: Optional[Dict[str, Any]] = None
 
 class TaperingSchedule(BaseModel):
     """Week-by-week tapering schedule"""
