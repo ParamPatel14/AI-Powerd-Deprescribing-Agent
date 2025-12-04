@@ -45,26 +45,56 @@ class GeminiTaperService:
     @staticmethod
     def _extract_json_substring(text: str) -> str:
         """
-        Try to extract the first JSON object/array substring from text.
-        Returns the substring or raises ValueError if none found.
+        Extract the first valid JSON object or array from the text.
+        Tries multiple strategies:
+        1. Full-string JSON
+        2. Largest {...} match
+        3. Largest [...] match
+        4. Bracket-walking fallback
+        Raises ValueError if no valid JSON found.
         """
+        import re, json
+
         if not isinstance(text, str):
             text = str(text)
 
         s = text.strip()
 
-        # Fast check: if the whole string is valid JSON, return it
+        # 1️⃣ Try full JSON first
         try:
             json.loads(s)
             return s
         except Exception:
             pass
 
-        # Find first '{' or '[' and attempt to match braces
-        starts = [m.start() for m in re.finditer(r"[\{\[]", text)]
+        # Helper: validate JSON safely
+        def is_valid_json(candidate: str) -> bool:
+            try:
+                json.loads(candidate)
+                return True
+            except Exception:
+                return False
+
+        # 2️⃣ Regex: find the largest {...} block
+        object_pattern = r'\{(?:[^{}]|(?:\{[^{}]*\}))*\}'
+        obj_matches = re.findall(object_pattern, text, flags=re.DOTALL)
+        for m in obj_matches:
+            if is_valid_json(m):
+                return m
+
+        # 3️⃣ Regex: find the largest [...] block
+        array_pattern = r'\[(?:[^\[\]]|(?:\[[^\[\]]*\]))*\]'
+        arr_matches = re.findall(array_pattern, text, flags=re.DOTALL)
+        for m in arr_matches:
+            if is_valid_json(m):
+                return m
+
+        # 4️⃣ Bracket walking fallback (your original logic, improved)
+        starts = [m.start() for m in re.finditer(r"[{\[]", text)]
         for start in starts:
             open_char = text[start]
             close_char = "}" if open_char == "{" else "]"
+
             depth = 0
             for i in range(start, len(text)):
                 if text[i] == open_char:
@@ -73,12 +103,13 @@ class GeminiTaperService:
                     depth -= 1
                     if depth == 0:
                         candidate = text[start : i + 1]
-                        try:
-                            json.loads(candidate)
+                        if is_valid_json(candidate):
                             return candidate
-                        except Exception:
-                            break  # invalid candidate; try next start
+                        break
+
+        # ❌ Nothing worked
         raise ValueError("No valid JSON object/array found in model output.")
+
 
     def _get_text_from_response(self, raw_response: Any) -> str:
         """

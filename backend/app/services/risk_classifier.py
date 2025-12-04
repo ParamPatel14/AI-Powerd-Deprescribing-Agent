@@ -14,17 +14,21 @@ class RiskClassifier:
         self.ttb_engine = ttb_engine
     
     def determine_base_risk(self, med_name: str, acb_score: int, 
-                           has_beers: bool, has_stopp: bool) -> RiskCategory:
+                       has_beers: bool, has_stopp: bool) -> RiskCategory:
         """Determine initial risk category based on basic criteria"""
         
-        # RED: High ACB or multiple major flags
+        # ✅ RED: Any single criterion is enough
         if acb_score >= 3:
             return RiskCategory.RED
-        if has_beers and has_stopp:
+        
+        if has_beers:
             return RiskCategory.RED
         
-        # YELLOW: Moderate concerns
-        if acb_score >= 1 or has_beers or has_stopp:
+        if has_stopp:
+            return RiskCategory.RED
+        
+        # YELLOW: Moderate ACB
+        if acb_score >= 1:
             return RiskCategory.YELLOW
         
         # GREEN: No major concerns

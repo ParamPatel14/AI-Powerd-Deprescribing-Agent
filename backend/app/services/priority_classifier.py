@@ -107,15 +107,19 @@ class PriorityClassifier:
     
     def _determine_base_risk(self, acb_score: int, has_beers: bool, has_stopp: bool) -> RiskCategory:
         """Determine initial risk category"""
-        # RED: High anticholinergic burden or multiple major flags
+        
+        # ✅ RED: Any of these alone is RED
         if acb_score >= 3:
             return RiskCategory.RED
         
-        if has_beers and has_stopp:
+        if has_beers:
+            return RiskCategory.RED
+        
+        if has_stopp:
             return RiskCategory.RED
         
         # YELLOW: Moderate concerns
-        if acb_score >= 1 or has_beers or has_stopp:
+        if acb_score >= 1:
             return RiskCategory.YELLOW
         
         # GREEN: No major concerns at baseline

@@ -11,12 +11,14 @@ import pandas as pd
 from app.services.clinical_calculators import ClinicalCalculators
 from app.services.organ_function_checker import OrganFunctionChecker
 from app.services.taper_plan_service import TaperPlanService
+from app.services.polypharmacy_detector import PolypharmacyDetector
 
 class AnalysisService:
     def __init__(self, all_engines: Dict):
         """Initialize with all engine instances"""
         self.engines = all_engines
         self.priority_classifier = PriorityClassifier()
+        self.polypharmacy_detector = PolypharmacyDetector()
 
     def analyze_patient_comprehensive(self, patient: PatientInput) -> AnalyzePatientResponse:
         """Comprehensive patient analysis orchestration"""
@@ -55,12 +57,22 @@ class AnalysisService:
             patient.ast_u_l, 
             patient.alt_u_l
         )
+        print("\n🔍 Polypharmacy Detection:")
+        polypharmacy_alerts = self.polypharmacy_detector.detect_polypharmacy(patient)
+        
+        if polypharmacy_alerts:
+            for alert in polypharmacy_alerts:
+                print(f"   {'🔴' if alert['severity'] == 'HIGH' else '🟡'} {alert['reason']}")
+                print(f"      Medications: {', '.join(alert['medications'])}")
+        else:
+            print("   ✅ No polypharmacy issues detected")
 
         # ===== STEP 5: Build medication analyses (with organ warnings) =====
         medication_analyses = self._build_medication_analyses(
             patient, acb_result, beers_matches, stopp_flags,
             ttb_assessments, gender_flags, all_interactions,
-            organ_warnings  # ✅ Pass organ warnings
+            organ_warnings,
+            polypharmacy_alerts
         )
 
         # ===== STEP 6: Build tapering schedules =====
@@ -139,7 +151,8 @@ class AnalysisService:
         ttb_assessments,
         gender_flags,
         interactions,
-        organ_warnings
+        organ_warnings,
+        polypharmacy_alerts
         
     ) -> List[MedicationAnalysis]:
         """Build detailed medication analysis with organ function warnings"""
@@ -239,6 +252,18 @@ class AnalysisService:
                     flags.append(f"⚠️ HEPATIC: {hw['reason']}")
                     recommendations.append("Monitor LFTs")
                     monitoring.append("Liver function tests")
+
+            poly_flags = self.polypharmacy_detector.get_flags_for_medication(
+                med.generic_name, polypharmacy_alerts
+            )
+        
+            if poly_flags:
+                flags.extend(poly_flags)
+            
+            # Add recommendations from polypharmacy alerts
+                for alert in polypharmacy_alerts:
+                    if med.generic_name in alert['medications']:
+                        recommendations.append(alert['recommendation'])
 
             # ------ RISK SCORING ------
             risk_category = self._determine_risk_category(acb_score, flags)
@@ -487,17 +512,39 @@ class AnalysisService:
     
     def _determine_risk_category(self, acb_score: int, flags: List[str]) -> RiskCategory:
         """Determine risk category based on scores and flags"""
+        
+        # ✅ RED if ANY of these core criteria are met:
+        # 1. High ACB score
         if acb_score >= 3:
             return RiskCategory.RED
         
-        red_keywords = ["High anticholinergic", "STOPP", "Major interaction", "Time-to-benefit"]
+        # 2. Beers Criteria matched
+        if any("Beers Criteria" in flag for flag in flags):
+            return RiskCategory.RED
+        
+        # 3. STOPP Criteria matched
+        if any("STOPP Criteria" in flag or "STOPP" in flag for flag in flags):
+            return RiskCategory.RED
+        
+        if any("THERAPEUTIC DUPLICATION" in flag for flag in flags):
+            return RiskCategory.RED
+        
+        # 4. Other high-risk flags
+        red_keywords = ["Major interaction", "Time-to-benefit exceeds", "⚠️ RENAL: STOP", "⚠️ RENAL: AVOID"]
         if any(any(keyword in flag for keyword in red_keywords) for flag in flags):
             return RiskCategory.RED
         
+
+        if any("POLYPHARMACY" in flag for flag in flags):
+            return RiskCategory.YELLOW
+        
+        # YELLOW: Moderate concerns
         if acb_score >= 1 or len(flags) >= 2:
             return RiskCategory.YELLOW
         
+        # GREEN: No major concerns
         return RiskCategory.GREEN
+
     
     def _calculate_risk_score(self, acb_score: int, flag_count: int, category: RiskCategory) -> int:
         """Calculate numerical risk score (1-10)"""

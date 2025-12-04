@@ -2,41 +2,344 @@
 @tailwind components;
 @tailwind utilities;
 
-.App {
-  text-align: center;
+:root {
+  --medical-primary: #0891B2;
+  --medical-secondary: #0E7490;
+  --medical-dark: #164E63;
+  --medical-light: #ECFEFF;
+  --medical-accent: #06B6D4;
+  --risk-red: #DC2626;
+  --risk-yellow: #F59E0B;
+  --risk-green: #10B981;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+* {
+  scroll-behavior: smooth;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
+body {
+  background: linear-gradient(135deg, #f0fdfa 0%, #ecfeff 50%, #f0f9ff 100%);
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+@layer components {
+  .glass-card {
+    @apply bg-white/80 backdrop-blur-lg border border-white/20 shadow-xl;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .glass-dark {
+    @apply bg-gray-900/80 backdrop-blur-lg border border-gray-700/30;
+  }
+
+  .medical-gradient {
+    background: linear-gradient(135deg, #0891B2 0%, #0E7490 50%, #164E63 100%);
+  }
+
+  .medical-gradient-soft {
+    background: linear-gradient(135deg, rgba(8, 145, 178, 0.1) 0%, rgba(14, 116, 144, 0.05) 100%);
+  }
+
+  .card-medical {
+    @apply bg-white rounded-2xl shadow-medical border border-gray-100/50;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-medical:hover {
+    @apply shadow-card-hover;
+    transform: translateY(-4px);
+  }
+
+  .btn-medical {
+    @apply px-6 py-3 bg-gradient-to-r from-medical-primary to-medical-secondary text-white font-semibold rounded-xl;
+    @apply hover:from-medical-secondary hover:to-medical-dark;
+    @apply transform transition-all duration-300 hover:scale-105 hover:shadow-glow-cyan;
+    @apply active:scale-95;
+  }
+
+  .btn-medical-outline {
+    @apply px-6 py-3 border-2 border-medical-primary text-medical-primary font-semibold rounded-xl;
+    @apply hover:bg-medical-primary hover:text-white;
+    @apply transform transition-all duration-300;
+  }
+
+  .input-medical {
+    @apply w-full px-4 py-3 border-2 border-gray-200 rounded-xl;
+    @apply focus:border-medical-primary focus:ring-4 focus:ring-medical-primary/20;
+    @apply transition-all duration-300;
+    @apply hover:border-gray-300;
+  }
+
+  .input-medical:focus {
+    @apply outline-none;
+    box-shadow: 0 0 0 4px rgba(8, 145, 178, 0.15);
+  }
+
+  .section-header {
+    @apply text-2xl font-bold text-gray-800 mb-6;
+    @apply flex items-center gap-3;
+  }
+
+  .section-header-icon {
+    @apply w-10 h-10 rounded-xl bg-gradient-to-br from-medical-primary to-medical-secondary;
+    @apply flex items-center justify-center text-white;
+  }
+
+  .risk-badge-red {
+    @apply px-3 py-1 bg-gradient-to-r from-red-500 to-red-600 text-white text-sm font-semibold rounded-full;
+    @apply shadow-glow-red;
+  }
+
+  .risk-badge-yellow {
+    @apply px-3 py-1 bg-gradient-to-r from-amber-400 to-amber-500 text-white text-sm font-semibold rounded-full;
+    @apply shadow-glow-yellow;
+  }
+
+  .risk-badge-green {
+    @apply px-3 py-1 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-sm font-semibold rounded-full;
+    @apply shadow-glow-green;
+  }
+
+  .stagger-1 { animation-delay: 0.1s; }
+  .stagger-2 { animation-delay: 0.2s; }
+  .stagger-3 { animation-delay: 0.3s; }
+  .stagger-4 { animation-delay: 0.4s; }
+  .stagger-5 { animation-delay: 0.5s; }
+}
+
+@layer utilities {
+  .text-gradient-medical {
+    background: linear-gradient(135deg, #0891B2 0%, #164E63 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .border-gradient {
+    border-image: linear-gradient(135deg, #0891B2, #164E63) 1;
+  }
+
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.4) 50%,
+      rgba(255, 255, 255, 0) 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  .hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 30px rgba(8, 145, 178, 0.3);
+  }
+
+  .pulse-ring {
+    position: relative;
+  }
+
+  .pulse-ring::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    background: linear-gradient(135deg, #0891B2, #164E63);
+    opacity: 0;
+    animation: pulse 2s infinite;
+    z-index: -1;
+  }
+
+  @keyframes pulse {
+    0% {
+      opacity: 0;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.3;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.1);
+    }
+  }
+}
+
+.loading-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.heartbeat-icon {
+  animation: heartbeat 1.5s ease-in-out infinite;
+}
+
+.float-icon {
+  animation: float 3s ease-in-out infinite;
+}
+
+.medical-icon {
+  filter: drop-shadow(0 2px 4px rgba(8, 145, 178, 0.3));
+}
+
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease-out;
+}
+
+.scroll-reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tooltip-medical {
+  position: relative;
+}
+
+.tooltip-medical::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 12px;
+  background: #164E63;
+  color: white;
+  font-size: 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.tooltip-medical:hover::after {
+  opacity: 1;
+  bottom: calc(100% + 8px);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #0891B2, #164E63);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #0E7490, #0891B2);
+}
+
+::selection {
+  background: rgba(8, 145, 178, 0.3);
+  color: #164E63;
+}
+
+.progress-ring {
+  transform: rotate(-90deg);
+}
+
+.progress-ring-circle {
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.5s ease;
+}
+
+.number-counter {
+  display: inline-block;
+  animation: countUp 0.8s ease-out;
+}
+
+.stat-card-enter {
+  animation: scaleIn 0.4s ease-out;
+}
+
+.modal-overlay {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.modal-content {
+  animation: scaleIn 0.3s ease-out;
+}
+
+.ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+}
+
+.ribbon::before {
+  content: 'AI';
+  position: absolute;
+  top: 20px;
+  right: -30px;
+  width: 120px;
+  padding: 8px 0;
+  background: linear-gradient(135deg, #7C3AED, #5B21B6);
+  color: white;
+  text-align: center;
+  font-weight: bold;
+  font-size: 12px;
+  transform: rotate(45deg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.dna-helix {
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(8, 145, 178, 0.05) 10px,
+    rgba(8, 145, 178, 0.05) 20px
+  );
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+  }
+  
+  .card-medical {
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
