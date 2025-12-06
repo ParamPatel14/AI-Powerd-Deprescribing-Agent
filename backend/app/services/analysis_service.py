@@ -272,6 +272,7 @@ class AnalysisService:
 
 
             taper_plan_dict = None
+            """
             if taper_required and 'taper_service' in self.engines:
                 try:
                     print(f"🔧 Generating taper plan for {med.generic_name} ({risk_category.value})")
@@ -323,6 +324,7 @@ class AnalysisService:
                     import traceback
                     traceback.print_exc()
                     taper_plan_dict = None
+            """
 
             # Default recommendations if none added
             if not recommendations:

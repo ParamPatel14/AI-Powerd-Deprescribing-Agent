@@ -54,12 +54,6 @@ const ResultsDashboard = ({ results, patientData }) => {
       return () => clearInterval(interval);
     }
   }, [results]);
-
-  React.useEffect(() => {
-    if (results) {
-      generateProfessionalPDF();
-    }
-  }, [results]);
   
   if (!results) return null;
 
