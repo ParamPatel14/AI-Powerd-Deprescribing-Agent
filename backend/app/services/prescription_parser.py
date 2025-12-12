@@ -9,7 +9,7 @@ import json
 class PrescriptionParser:
     def __init__(self, gemini_api_key: str):
         genai.configure(api_key=gemini_api_key)
-        self.model = genai.GenerativeModel('gemini-2.5-pro')
+        self.model = genai.GenerativeModel('gemini-2.5-flash')
 
     def _safe_extract_json(self, raw: str) -> dict:
         """

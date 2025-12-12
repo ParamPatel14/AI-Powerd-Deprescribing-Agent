@@ -1,6 +1,6 @@
 from datetime import datetime
 import os
-from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi import FastAPI, HTTPException, UploadFile, File, logger
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List
 
@@ -26,6 +26,11 @@ from app.services.pdf_generator import PDFGenerator
 
 # Initialize PDF generator
 pdf_generator = PDFGenerator()
+import logging
+
+app_logger = logging.getLogger("DocathonMain")
+app_logger.setLevel(logging.INFO)
+
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -108,6 +113,11 @@ if taper_service.use_gemini and taper_service.gemini_service:
 else:
     print("  ⚠️  Taper service will NOT use Gemini")
 print("="*60 + "\n")
+api_key = os.getenv("GEMINI_API_KEY")
+if api_key:
+    app_logger.warning(f"Using Gemini API Key (first 8 chars): {api_key}")
+else:
+    app_logger.error("❌ GEMINI_API_KEY is missing from environment")
 
 
 # ========== ENDPOINT 1: /analyze-patient ==========
